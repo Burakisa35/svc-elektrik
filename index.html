@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVC Elektrik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --bg: #0A0A0A;
+    --bg2: #111111;
+    --surface: #161616;
+    --border: rgba(201,168,76,0.18);
+    --text: #E8E8E8;
+    --text-dim: rgba(232,232,232,0.45);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘Outfit’, sans-serif;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Grain overlay */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 999;
+opacity: 0.6;
+}
+
+/* Ambient glow */
+body::after {
+content: ‘’;
+position: fixed;
+top: -20%;
+left: 50%;
+transform: translateX(-50%);
+width: 600px;
+height: 400px;
+background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+pointer-events: none;
+z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 20px 24px;
+background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+}
+
+.logo {
+display: flex;
+flex-direction: column;
+line-height: 1;
+}
+
+.logo-svc {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 28px;
+letter-spacing: 4px;
+background: linear-gradient(135deg, #D0D0D0 30%, var(–gold) 60%, #D0D0D0 90%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.logo-sub {
+font-size: 9px;
+letter-spacing: 3px;
+color: var(–gold);
+text-transform: uppercase;
+opacity: 0.8;
+margin-top: 2px;
+}
+
+.status-badge {
+display: flex;
+align-items: center;
+gap: 7px;
+font-size: 11px;
+letter-spacing: 1.5px;
+color: var(–text-dim);
+text-transform: uppercase;
+}
+
+.status-dot {
+width: 7px;
+height: 7px;
+background: #4CAF50;
+border-radius: 50%;
+box-shadow: 0 0 8px rgba(76,175,80,0.8);
+animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(76,175,80,0.8); }
+50% { opacity: 0.6; box-shadow: 0 0 14px rgba(76,175,80,0.4); }
+}
+
+/* ── MAIN SCREEN ── */
+.screen {
+display: none;
+min-height: 100vh;
+position: relative;
+z-index: 1;
+animation: fadeIn 0.35s ease;
+}
+
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SCREEN 1: ANA ── */
+#screen-main {
+justify-content: center;
+align-items: center;
+padding: 100px 24px 40px;
+text-align: center;
+min-height: 100vh;
+}
+
+.main-question {
+font-size: 13px;
+letter-spacing: 3px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin-bottom: 36px;
+}
+
+.cards-row {
+display: flex;
+gap: 12px;
+width: 100%;
+max-width: 380px;
+margin: 0 auto 20px;
+}
+
+.service-card {
+flex: 1;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 22px 8px 18px;
+cursor: pointer;
+transition: all 0.22s ease;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+position: relative;
+overflow: hidden;
+}
+
+.service-card::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–gold), transparent);
+opacity: 0;
+transition: opacity 0.22s;
+}
+
+.service-card:active,
+.service-card:hover {
+border-color: rgba(201,168,76,0.5);
+background: rgba(201,168,76,0.06);
+transform: translateY(-2px);
+}
+
+.service-card:active::before,
+.service-card:hover::before { opacity: 1; }
+
+.card-icon {
+font-size: 26px;
+line-height: 1;
+}
+
+.card-label {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 15px;
+letter-spacing: 3px;
+color: var(–text);
+}
+
+.card-arrow {
+font-size: 11px;
+color: var(–gold);
+opacity: 0.7;
+}
+
+.main-tagline {
+font-size: 11px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin-top: 8px;
+}
+
+/* Trust bar */
+.trust-bar {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+padding: 16px 24px 24px;
+background: linear-gradient(to top, rgba(10,10,10,0.98), transparent);
+z-index: 50;
+text-align: center;
+}
+
+.trust-links {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 6px;
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+}
+
+.trust-links span { opacity: 0.3; }
+
+/* ── SCREEN 2: ALT KATEGORİLER ── */
+#screen-sub {
+padding: 90px 24px 100px;
+}
+
+.back-btn {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 11px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+cursor: pointer;
+margin-bottom: 32px;
+background: none;
+border: none;
+color: var(–text-dim);
+padding: 0;
+}
+
+.back-btn:active { opacity: 0.6; }
+
+.screen-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 38px;
+letter-spacing: 4px;
+background: linear-gradient(135deg, #D0D0D0, var(–gold));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin-bottom: 6px;
+}
+
+.screen-subtitle {
+font-size: 12px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin-bottom: 28px;
+}
+
+.sub-list {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.sub-item {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 18px 20px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: space-between;
+transition: all 0.2s ease;
+}
+
+.sub-item:active,
+.sub-item:hover {
+border-color: rgba(201,168,76,0.45);
+background: rgba(201,168,76,0.05);
+padding-left: 24px;
+}
+
+.sub-item-text {
+font-size: 15px;
+font-weight: 400;
+letter-spacing: 0.5px;
+}
+
+.sub-item-arrow {
+color: var(–gold);
+font-size: 14px;
+opacity: 0.6;
+}
+
+/* ── SCREEN 3: BÖLGE ── */
+#screen-region {
+padding: 90px 24px 100px;
+}
+
+.region-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+
+.region-item {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px 16px;
+cursor: pointer;
+text-align: center;
+transition: all 0.2s ease;
+}
+
+.region-item:active,
+.region-item:hover {
+border-color: rgba(201,168,76,0.45);
+background: rgba(201,168,76,0.06);
+transform: scale(0.98);
+}
+
+.region-name {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 18px;
+letter-spacing: 2px;
+color: var(–text);
+display: block;
+margin-bottom: 4px;
+}
+
+.region-sub {
+font-size: 10px;
+color: var(–text-dim);
+letter-spacing: 1px;
+}
+
+/* ── SCREEN 4: WHATSAPP ── */
+#screen-wa {
+padding: 90px 24px 100px;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+.wa-icon {
+font-size: 52px;
+margin-bottom: 16px;
+display: block;
+animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
+}
+
+.wa-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 32px;
+letter-spacing: 3px;
+color: var(–text);
+margin-bottom: 10px;
+}
+
+.wa-summary {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 20px;
+margin: 24px 0;
+text-align: left;
+max-width: 340px;
+width: 100%;
+}
+
+.wa-summary-label {
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 12px;
+}
+
+.wa-summary-row {
+display: flex;
+justify-content: space-between;
+padding: 6px 0;
+border-bottom: 1px solid rgba(255,255,255,0.05);
+font-size: 13px;
+}
+
+.wa-summary-row:last-child { border-bottom: none; }
+
+.wa-key { color: var(–text-dim); }
+.wa-val { color: var(–text); font-weight: 500; }
+
+.wa-btn {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+width: 100%;
+max-width: 340px;
+background: linear-gradient(135deg, #25D366, #128C7E);
+color: #fff;
+border: none;
+border-radius: 14px;
+padding: 18px 24px;
+font-family: ‘Outfit’, sans-serif;
+font-size: 15px;
+font-weight: 500;
+letter-spacing: 1px;
+cursor: pointer;
+transition: all 0.2s ease;
+box-shadow: 0 8px 32px rgba(37,211,102,0.25);
+}
+
+.wa-btn:active {
+transform: scale(0.97);
+box-shadow: 0 4px 16px rgba(37,211,102,0.2);
+}
+
+.wa-note {
+font-size: 11px;
+color: var(–text-dim);
+margin-top: 16px;
+letter-spacing: 1px;
+}
+
+/* Gold divider */
+.gold-line {
+width: 40px;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–gold), transparent);
+margin: 20px auto;
+}
+
+/* Progress dots */
+.progress {
+display: flex;
+gap: 6px;
+justify-content: center;
+margin-bottom: 28px;
+}
+
+.progress-dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(–border);
+transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+background: var(–gold);
+box-shadow: 0 0 8px rgba(201,168,76,0.6);
+width: 18px;
+border-radius: 3px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+
+<header>
+  <div class="logo">
+    <span class="logo-svc">SVC</span>
+    <span class="logo-sub">Elektrik</span>
+  </div>
+  <div class="status-badge">
+    <div class="status-dot"></div>
+    <span>Aktif Destek</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════ -->
+
+<!-- SCREEN 1: ANA SEÇİM           -->
+
+<!-- ═══════════════════════════════ -->
+
+<div class="screen active" id="screen-main">
+  <p class="main-question">Ne konuda destek gerekiyor?</p>
+
+  <div class="cards-row">
+    <div class="service-card" onclick="selectService('kamera','Kamera','📷')">
+      <div class="card-icon">📷</div>
+      <div class="card-label">Kamera</div>
+      <div class="card-arrow">↗</div>
+    </div>
+    <div class="service-card" onclick="selectService('elektrik','Elektrik','⚡')">
+      <div class="card-icon">⚡</div>
+      <div class="card-label">Elektrik</div>
+      <div class="card-arrow">↗</div>
+    </div>
+    <div class="service-card" onclick="selectService('ag','Ağ','🌐')">
+      <div class="card-icon">🌐</div>
+      <div class="card-label">Ağ</div>
+      <div class="card-arrow">↗</div>
+    </div>
+  </div>
+
+  <p class="main-tagline">Teknik bilgi gerekmez.</p>
+</div>
+
+<!-- ═══════════════════════════════ -->
+
+<!-- SCREEN 2: ALT KATEGORİLER     -->
+
+<!-- ═══════════════════════════════ -->
+
+<div class="screen" id="screen-sub">
+  <button class="back-btn" onclick="goBack('main')">← Geri</button>
+
+  <div class="progress">
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <div class="screen-title" id="sub-title">KAMERA</div>
+  <div class="screen-subtitle">Sorunu seçin</div>
+
+  <div class="sub-list" id="sub-list"></div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+
+<!-- SCREEN 3: BÖLGE               -->
+
+<!-- ═══════════════════════════════ -->
+
+<div class="screen" id="screen-region">
+  <button class="back-btn" onclick="goBack('sub')">← Geri</button>
+
+  <div class="progress">
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <div class="screen-title">BÖLGE</div>
+  <div class="screen-subtitle">Hizmet bölgenizi seçin</div>
+
+  <div class="region-grid">
+    <div class="region-item" onclick="selectRegion('Kemalpaşa')">
+      <span class="region-name">Kemalpaşa</span>
+      <span class="region-sub">Armutlu dahil</span>
+    </div>
+    <div class="region-item" onclick="selectRegion('Bornova')">
+      <span class="region-name">Bornova</span>
+      <span class="region-sub">Merkez</span>
+    </div>
+    <div class="region-item" onclick="selectRegion('Alsancak / Konak')">
+      <span class="region-name">Konak</span>
+      <span class="region-sub">Alsancak dahil</span>
+    </div>
+    <div class="region-item" onclick="selectRegion('İzmir Diğer')">
+      <span class="region-name">Diğer</span>
+      <span class="region-sub">İzmir geneli</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+
+<!-- SCREEN 4: WHATSAPP             -->
+
+<!-- ═══════════════════════════════ -->
+
+<div class="screen" id="screen-wa">
+  <button class="back-btn" onclick="goBack('region')" style="position:absolute;top:90px;left:24px;">← Geri</button>
+
+  <div class="progress" style="margin-top:40px;">
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot active"></div>
+  </div>
+
+<span class="wa-icon">💬</span>
+
+  <div class="wa-title">Hazır</div>
+  <div class="gold-line"></div>
+
+  <div class="wa-summary">
+    <div class="wa-summary-label">Talep özeti</div>
+    <div class="wa-summary-row">
+      <span class="wa-key">Hizmet</span>
+      <span class="wa-val" id="sum-service">—</span>
+    </div>
+    <div class="wa-summary-row">
+      <span class="wa-key">Konu</span>
+      <span class="wa-val" id="sum-issue">—</span>
+    </div>
+    <div class="wa-summary-row">
+      <span class="wa-key">Bölge</span>
+      <span class="wa-val" id="sum-region">—</span>
+    </div>
+    <div class="wa-summary-row">
+      <span class="wa-key">İş No</span>
+      <span class="wa-val" id="sum-jobno">—</span>
+    </div>
+  </div>
+
+  <button class="wa-btn" onclick="openWhatsApp()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    WhatsApp'a Geç
+  </button>
+
+  <p class="wa-note">Hazır mesaj otomatik oluşturuldu.</p>
+</div>
+
+<!-- TRUST BAR (sadece ana sayfada görünür) -->
+
+<div class="trust-bar" id="trust-bar">
+  <div class="trust-links">
+    <span>Google</span>
+    <span>•</span>
+    <span>Armut</span>
+    <span>•</span>
+    <span>Hikvision</span>
+    <span>•</span>
+    <span>Instagram</span>
+  </div>
+</div>
+
+<script>
+const subOptions = {
+  kamera: ['Görüntü Yok','Kayıt Çalışmıyor','Telefona Bağlanmıyor','Yeni Sistem Kurulumu','Solar Kamera'],
+  elektrik: ['Sigorta Atıyor','Priz / Hat Problemi','Aydınlatma','Pano İşlemi','Yeni Hat Çekimi'],
+  ag: ['İnternet Çekmiyor','Kablo Hattı','Modem / Router','Kamera Ağı','Zayıf Akım Tesisatı']
+};
+
+let state = { service: '', serviceLabel: '', icon: '', issue: '', region: '' };
+
+function generateJobNo() {
+  const d = new Date();
+  const yy = String(d.getFullYear()).slice(2);
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const rnd = String(Math.floor(Math.random()*900)+100);
+  return `SVC-${yy}${mm}${dd}-${rnd}`;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.getElementById('trust-bar').style.display = id === 'main' ? 'block' : 'none';
+  window.scrollTo(0,0);
+}
+
+function selectService(key, label, icon) {
+  state.service = key;
+  state.serviceLabel = label;
+  state.icon = icon;
+
+  document.getElementById('sub-title').textContent = label.toUpperCase();
+  const list = document.getElementById('sub-list');
+  list.innerHTML = '';
+  subOptions[key].forEach(opt => {
+    const el = document.createElement('div');
+    el.className = 'sub-item';
+    el.innerHTML = `<span class="sub-item-text">${opt}</span><span class="sub-item-arrow">→</span>`;
+    el.onclick = () => selectIssue(opt);
+    list.appendChild(el);
+  });
+  showScreen('sub');
+}
+
+function selectIssue(issue) {
+  state.issue = issue;
+  showScreen('region');
+}
+
+function selectRegion(region) {
+  state.region = region;
+  const jobNo = generateJobNo();
+  state.jobNo = jobNo;
+  document.getElementById('sum-service').textContent = state.serviceLabel;
+  document.getElementById('sum-issue').textContent = state.issue;
+  document.getElementById('sum-region').textContent = region;
+  document.getElementById('sum-jobno').textContent = jobNo;
+  showScreen('wa');
+}
+
+function openWhatsApp() {
+  const msg = `Merhaba, SVC Elektrik üzerinden ulaşıyorum.\n\nKonu: ${state.serviceLabel} / ${state.issue}\nBölge: ${state.region}\nİş No: ${state.jobNo}\n\nDestek almak istiyorum.`;
+  const phone = '905XXXXXXXXX'; // SVC numarasını buraya yaz
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function goBack(to) {
+  if (to === 'main') showScreen('main');
+  else if (to === 'sub') showScreen('sub');
+  else if (to === 'region') showScreen('region');
+}
+</script>
+
+</body>
+</html>
