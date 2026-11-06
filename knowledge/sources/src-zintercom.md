@@ -5,6 +5,6 @@ url: https://diyruz.github.io/posts/zintercom/
 class: devre-analizi
 language: en
 retrieved: 2026-11-07
-reliability: Orta
-note: Başka dairelere çapraz çağrı, bir transistörün ters diyotu üzerinden devre kapanmasıyla; çözüm seri diyot. Farklı sistem: analoji, tek kaynak.
+reliability: Doğrulanmadı
+note: Başka dairelere çapraz çağrı, bir transistörün ters diyotu üzerinden devre kapanmasıyla; çözüm: şemaya göre diyot eklenmesi (seri olduğu doğrulanmadı). Farklı sistem, tek DIY kaynağı: analoji.
 ---

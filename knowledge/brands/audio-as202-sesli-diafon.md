@@ -4,39 +4,41 @@ type: brand_model
 title: Audio AS-202 / 8+nD sesli diafon (kapıcısız çift zilli)
 status: taslak
 updated: 2026-11-07
-confidence: Yüksek
-sources: [src-audio-as202-kilavuz, src-audio-8nd-diafoncu, src-kontrolkalemi-audio-ariza-notlari]
+confidence: Orta
+sources: [src-audio-as202-kilavuz, src-audio-8nd-diafoncu, src-kontrolkalemi-audio-ariza-notlari, src-simge-daire-subesi-2020]
 ---
 
 ## Özet
-Netelsan ile aynı yapı: santral + DT8 + zil paneli + şube. Elektriksel prensip karşılaştırması için en iyi belgelenmiş referans. Netelsan'a **uç olarak taşınmaz**, yalnız analoji.
+Netelsan ile aynı yapı. Elektriksel prensip karşılaştırması için referans; Netelsan'a **uç olarak taşınmaz**. Kayıt genel güveni Orta çünkü uç 3, 5 ve birçok belirti tek forum kaynaklı.
 
-## Santral klemensleri (kılavuzdan)
+## Santral klemensleri
 | klemens | görev | güven | kaynak |
 |---|---|---|---|
 | 14-15 | Kapı hoparlör hattı, ekranlı kablo zorunlu | Yüksek | src-audio-as202-kilavuz |
-| 16 | İç zil ortağı (daire önü iç zil butonlarının ortak teli) | Yüksek | aynı |
-| 17 | Dış zil ortağı (zil panelinin ortak ucu) | Yüksek | aynı |
-| 18-19 | Kapıcı hoparlör (kapıcılı sistem) | Yüksek | src-audio-8nd-diafoncu |
-| 11-12 | Merdiven/kapı otomatiği test ucu (arıza notu: bu ikisini değdirince kapı açılıyorsa sistem arızasız) | Orta | src-kontrolkalemi-audio-ariza-notlari |
+| 16 | İç zil ortağı | Yüksek | aynı |
+| 17 | Dış zil ortağı | Yüksek | aynı |
+| 18-19 | Kapıcı hoparlör | Doğrulanmadı (bu oturumda metinde teyit edilemedi) | src-audio-8nd-diafoncu |
+| 11-12 | Kapı otomatiği testi: değdirince açılıyorsa sistem arızasız | Orta (forum arıza listesi) | src-kontrolkalemi-audio-ariza-notlari |
 
 ## Uçlar (DT8, şube)
-| uç | renk | işlev | arıza davranışı | güven | kaynak |
-|---|---|---|---|---|---|
-| 1 | Kırmızı | Güç (+) | Kopuk: o şube çalışmaz. 1-6 kısa devre: santral kırmızı LED söner | Yüksek (kısa devre kontrolü); Orta (kutup) | src-audio-as202-kilavuz, src-kontrolkalemi-audio-ariza-notlari |
-| 2 | Mavi | Ses/konuşma hattı | Kopuk: uğultu dış kapıda, daireye ses yok. 1-2 kısa devre: ses yok | Yüksek (belirti) / Doğrulanmadı (sinyal türü) | src-audio-as202-kilavuz |
-| 3 | Beyaz | Doğrulanmadı | Kopuk: tık-tık, yeşil LED sürekli | Orta (belirti) | src-kontrolkalemi-audio-ariza-notlari |
-| 4 | Yeşil | Kapıcı; kapıcısızda bağlanmaz | — | Yüksek | src-audio-as202-kilavuz |
-| 5 | Sarı | Doğrulanmadı | Kopuk: yeşil LED kısa, ~15 sn bekleme | Orta (belirti, tek kaynak) | src-kontrolkalemi-audio-ariza-notlari |
-| 6 | Pembe | Güç (−) | Kopuk: kırmızı LED sönük | Orta | src-kontrolkalemi-audio-ariza-notlari |
-| 7 Gri / 8 Siyah | | Kapı otomatiği kuru kontağı: gri → harici trafo, siyah → kilit | Diafon arızalansa da kapı otomatiği çalışır | Yüksek | src-audio-as202-kilavuz |
-| ZİL (şube klemens 10) | | Panel zil teli ile iç zil butonu teli **birleştirilip** 10 numaralı klemense | Tek şubede çalmıyorsa o dairenin zil teli/şubesi | Yüksek | src-audio-as202-kilavuz |
+| uç | renk | işlev | sinyal | akım yolu | arıza davranışı | güven | kaynak |
+|---|---|---|---|---|---|---|---|
+| 1 | Kırmızı | Güç | DC; kutup Doğrulanmadı (forumlarda çelişkili) | Santral → şubeler → panel fotosel | 1-6 kısa devre kontrolü kılavuzda "hiç çalışmıyor" başlığında; LED sönmesi Simge/forumdan | Orta | src-audio-as202-kilavuz, src-simge-daire-subesi-2020 |
+| 2 | Mavi | Ses/konuşma hattı | Doğrulanmadı | Santral ↔ şube | Kılavuz: "hiç ses yok" için 1-2 arası kısa devre kontrolü; "konuşmada kapıda uğultu varsa 2 kopuk olabilir". Forum tablosu bunun tersini yazar (çelişki) | Orta; tamamlanmadı | src-audio-as202-kilavuz, src-kontrolkalemi-audio-ariza-notlari |
+| 3 | Beyaz | Doğrulanmadı | Doğrulanmadı | Doğrulanmadı | Forum: kopukken tık-tık, yeşil LED sürekli | tamamlanmadı | src-kontrolkalemi-audio-ariza-notlari |
+| 4 | Yeşil | Kapıcı; kapıcısızda bağlanmaz | — | — | — | Yüksek | src-audio-as202-kilavuz |
+| 5 | Sarı | Doğrulanmadı | Doğrulanmadı | Doğrulanmadı | Forum: kopukken yeşil LED kısa, ~15 sn bekleme | tamamlanmadı | src-kontrolkalemi-audio-ariza-notlari |
+| 6 | Pembe | Güç | DC; kutup Doğrulanmadı | Santral → şubeler → panel | Forum: kopukken kırmızı LED sönük | Orta | src-kontrolkalemi-audio-ariza-notlari |
+| 7 Gri / 8 Siyah | | Kapı otomatiği kuru kontağı: gri → harici trafo, siyah → kilit | Anahtarlanan düşük gerilim AC | Şube kontağı → trafo → kilit | Diafon arızalansa da otomatik çalışır | Yüksek | src-audio-as202-kilavuz |
+| ZİL (şube klemens 10) | | Panel zil teli ile iç zil butonu teli **birleştirilip** 10'a | Zil ortağından buton kapanınca gelen çağrı | Ortak → buton → daire teli → şube | Tek şubede çalmıyorsa o dairenin zil teli/şubesi | Yüksek | src-audio-as202-kilavuz |
+
+Çelişki: forumlarda polarite bir yerde "1 +, 6 −", başka yerde tersi yazılı; kılavuz polarite vermiyor.
 
 ## Kurulum mantığı
-- Zil paneli → her daireye ayrı 0,50 mm² zil teli; santralden boydan boya tek ortak tel (17). İç zil: tek ortak tel (16). (Yüksek)
-- Sistem zilliyse daire önü butonları ışıklı olmamalı. (Orta: forum notu, tek kaynak)
-- Zillere harici trafo gerilimi verilmemeli; "zil ortak uçlarına voltaj karışmış olabilir, 16-17'yi sökün". (Yüksek: kılavuz)
-- Santral LED'leri ve sigorta: kılavuz 500 mA; forumda 200 mA geçiyor, model farkı Doğrulanmadı.
+- Panelden her daireye ayrı 0,50 mm² zil teli; santralden tek ortak tel (17), iç zil için ortak (16). (Yüksek)
+- Sistem zilliyse daire önü butonları ışıklı olmamalı. (Orta, tek kaynak)
+- Zil ortak uçlarına harici gerilim karışmış olabilir: 16-17'yi sökerek kontrol. (Yüksek)
+- Sigorta: kılavuz 500 mA; forumda 200 mA geçiyor, model farkı Doğrulanmadı.
 
 ## Açık sorular
 - Beyaz ve sarı hattın işlevi Audio'da da belgelenmemiş.

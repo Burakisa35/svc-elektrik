@@ -18,4 +18,14 @@ Importer bu dosyayı atlar (`type: log`).
 | Aynı belirti | tr | 3 vaka (Netelsan 2021, DonanımHaber 2016, Audio notları s.19); hiçbirinde kök neden yazılı |
 | Aynı belirti, ES (YoReparo) | es | Çözümlü Commax vakası bulundu |
 
+### Kullanılan sorgu metinleri
+- `Netelsan sesli diafon daire şubesi bağlantı şeması santral klemens zil iç zil dış zil`
+- `Audio Elektronik AS-202 sesli diafon santral kılavuzu DT8 kablo daire şubesi bağlantı`
+- `Simge diafon sesli santral daire şube bağlantı şeması zil kablosu`
+- `intercom pressing one apartment button rings other apartments bell wires crosstalk fault cause`
+- `diafon bir daireye basınca diğer daireler çalıyor zil çapraz çalma arıza sebebi`
+- Araç rehberleri: `Claude Code memory CLAUDE.md best practices ...`, `Supabase row level security best practices migrations ...`, `Vercel environment variables preview production ...`
+
+Netelsan şube kart şeması için ayrı bir sorgu yapılmadı; Netelsan teknik belgelerinde yalnız montaj bağlantı şemaları göründü. Kart şeması "bulunamadı" değil, **aranmadı**: Tier-1 turu 2'de aranacak. H.M.SMA.00005 şeması önceki oturumdan; URL elde olmadığı için kaynak kaydı yok.
+
 Henüz taranmayan: PL, RU, DE, IT sorguları; Netelsan H.M.SMA.00005 yeniden açılması; Netelsan şube kart şeması (bulunamadı).
