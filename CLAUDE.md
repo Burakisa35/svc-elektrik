@@ -10,7 +10,7 @@ Bu dosya hem Claude Code hem sohbet tarafındaki Claude için bağlayıcıdır. 
 | `knowledge/**` (araştırma, uç/arıza bilgisi) | Claude (sohbet) | Claude Code **içeriği düzenlemez**; hatayı `docs/briefs/` altına not düşer |
 | `docs/briefs/**`, `docs/decisions/**` | Claude (sohbet) yazar, Burak iletir | Code okur, uygular |
 | `src/**`, `supabase/migrations/**`, UI, importer, build | Claude Code | Sohbet Claude'u **dokunmaz** |
-| `index.html` (mevcut site) | Claude Code | Sohbet Claude'u dokunmaz |
+| `index.html` (mevcut site) | Claude Code — **tümüyle yeniden yazılacak** (yama değil, sıfırdan tasarım) | Sohbet Claude'u dokunmaz |
 | Karar, öncelik, saha doğrulaması | Burak | — |
 
 Kurallar:
@@ -18,6 +18,10 @@ Kurallar:
 2. Sohbet Claude'u yalnızca kendi alanına yazar. Code, `knowledge/` içeriğini koda çevirir (importer), içeriği değiştirmez.
 3. `main`'e doğrudan push yok; her iş ayrı dal + commit. Commit mesajı Türkçe/kısa, "ne + neden".
 4. Migration dosya olarak yazılır (`supabase/migrations/`). Uygulama onayı: Burak'ın TEHAİ için verdiği otomatik uygulama tercihi **bu proje için geçerli değildir**; svc-elektrik'te önce Burak'a sorulur.
+
+## Kalite kontrol (paralel)
+
+Üreten denetlemez. Her faz `docs/quality/gates.md` kapısından geçmeden kapanmaz; denetim üretimle paralel yürür, sonda toplanmaz. Ayrıntı: `docs/quality/README.md`. Bulgular `docs/quality/findings/` altına yazılır; engelleyici bulgu açıkken sonraki faza geçilmez.
 
 ## Güven etiketi (zorunlu)
 
@@ -52,6 +56,7 @@ README.md          proje özeti, yerleşim
 knowledge/         araştırma bilgi tabanı (Claude sohbet sahibidir)
 docs/briefs/       araştırma ve tasarım brief'leri
 docs/decisions/    kısa karar kayıtları (ADR)
+docs/quality/      kalite kapıları ve bulgu kayıtları
 src/               uygulama (Claude Code) — henüz yok
 supabase/          migration'lar (Claude Code) — henüz yok
 ```

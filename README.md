@@ -14,6 +14,7 @@
 | `knowledge/` | Araştırma bilgi tabanı (güven etiketli) | Claude (sohbet) |
 | `docs/briefs/` | Araştırma ve tasarım brief'leri | Claude (sohbet) |
 | `docs/decisions/` | Karar kayıtları | Claude (sohbet) + Burak |
+| `docs/quality/` | Kalite kapıları, denetim bulguları | Claude (sohbet), ayrı denetçi oturum |
 | `src/`, `supabase/` | Uygulama ve veritabanı | Claude Code |
 
 Kurallar ve rol sınırları: [`CLAUDE.md`](CLAUDE.md). Bilgi tabanı formatı: [`knowledge/_SPEC.md`](knowledge/_SPEC.md).
