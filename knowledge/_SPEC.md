@@ -72,3 +72,22 @@ note: Neden güvenilir / sınırı ne
 - Her iddianın etiketi satır sonunda: `(Yüksek)`, `(Orta)`, `(Doğrulanmadı)`.
 - Rakip hipotezler ayrı numaralanır (H1, H2…) ve hangi kanıtın hangisini elediği yazılır.
 - Değişiklik: dosya içinde tarihli satır eklemek yerine `updated` güncellenir; büyük revizyon commit mesajında anlatılır.
+
+## fault_family (v0.2 eki)
+
+Belirti sınıfı dosyası: `knowledge/fault-families/*.md`, `type: fault_family`. Front matter: `id` (ff-…), `brands`, `confidence`, `status`. Gövde: aile tablosu (kod F1…, belirti, kayıtlı olduğu yerler, marka kaydı, açık vaka) ve soru parametreleri tablosu (kod Q-…, soru, cevap türü, ne ayırır, etiket). Vakasız ailede neden yazılmaz. Aile ve soru kodları **kalıcı kimliktir**: yeniden numaralanmaz, silinmez (kullanımdan kaldırılırsa `status: kaldirildi`).
+
+## Çözüm kaydı sözlüğü (v0.2 eki)
+
+Çözüm kayıtları bilgi tabanında değil, uygulamada (Supabase) tutulur; bilgi tabanı yalnız **kimlik sözlüğünü** sağlar ki kayıtlar analize bağlanabilsin. Sözlük:
+
+- `family_id`: F1…F7 (fault_family dosyasından)
+- `question_id` + `answer`: Q-… ve seçilen cevap
+- `hypothesis_id`: H1… (ilgili fault_case dosyasından; durum: canlı / elendi / doğrulandı)
+- `step_id`: vaka dosyasındaki test adımı (1, 2, … 7b)
+- `outcome`: cozuldu / kismen / cozulmedi / bekliyor
+- `root_cause_class`: `kisa_devre_iletkenler_arasi` / `yari_iletken_yolu` / `baglanti_hatasi` / `ek_yeri` / `komponent_arizasi` / `besleme` / `diger` / `bilinmiyor` (liste açık uçludur, ekleme bu dosyada yapılır)
+- `field_verified`: bool — çözümün sahada (dönüş testi) doğrulandığı
+- Zaman damgaları: vaka açılışı, her adımın bitişi, çözüm anı, **tekrar kontrol tarihi** (arıza geri geldi mi). Saat dilimi Europe/Istanbul; saat:dakika düzeyi yeterli.
+
+Kural: `outcome = cozuldu` yalnız `field_verified = true` ile ya da "doğrulanmadı" işaretiyle saklanır; ikincisi analizde ayrı sayılır. Saha sonucu araştırma çıkarımının üstündedir (kök CLAUDE.md).

@@ -30,3 +30,29 @@ Importer bu dosyayı atlar (`type: log`).
 Netelsan şube kart şeması için ayrı bir sorgu yapılmadı; Netelsan teknik belgelerinde yalnız montaj bağlantı şemaları göründü. Kart şeması "bulunamadı" değil, **aranmadı**: Tier-1 turu 2'de aranacak. H.M.SMA.00005 şeması önceki oturumdan; URL elde olmadığı için kaynak kaydı yok.
 
 Henüz taranmayan: PL, RU, DE, IT sorguları; Netelsan H.M.SMA.00005 yeniden açılması; Netelsan şube kart şeması (aranmadı).
+
+## Oturum 2 (2026-11-07) — Tier-1 kapanış + çok dilli tarama
+
+| Sorgu amacı | Dil | Sonuç |
+|---|---|---|
+| Netelsan şube kart şeması (3 sorgu) | tr | **Bulunamadı.** Yalnız montaj bağlantı şemaları (diafon1-4, nextel5), kod çözücü, garanti belgesi çıktı. Durma kuralı (3 sorguda yeni bilgi yok) uygulandı |
+| H.M.SMA.00005 | tr | **Bulunamadı** (netelsan.com.tr/sema/diafon listesinde diafon santral şemaları var, SMA.00005 görünmüyor) |
+| Daire içi bas-konuş devre şeması/tamir | tr | Bulunamadı; Kontrol Kalemi 2021 konusu zaten kayıtlı |
+| Çapraz çalma, PL | pl | Eşleşen vaka yok (elektroda #3796225 gibi sonuçlar kod/hat karışması, kök neden yok); SEO yazıları kullanılmadı |
+| Çapraz çalma, RU | ru | Koordinat/dijital sistem adresleme vakaları (Vizit/Cyfral); paralel hatlı analog çağrı teli ile eşleşmiyor. Bağlantı kaydı alınmadı |
+| Çapraz çalma, DE | de | 3 kullanılabilir kayıt + Siedle servis el kitabı (src-siedle-*, src-elektrikforum-*, src-mikrocontroller-*, src-elektrikforen-*) |
+| 4+N Fermax/Golmar | en/es | Üretici belgeleri: src-golmar-4n-kurulum, src-fermax-citymax-4n-semalar |
+| 2 telli BUS | en/de | Bticino, Fermax BUS2, Hager Elcom bulundu; **Tier-2 işi, henüz kaynak kaydı açılmadı** |
+
+Sorgu metinleri:
+- `Netelsan diafon şube kart şeması H.E.PCB.01032 devre şeması servis kılavuzu`
+- `Netelsan H.M.SMA.00005 sesli diafon daire şubesi bağlantı şeması fotosel 1 6`
+- `Netelsan sesli diafon daire telefonu iç devre şeması bas konuş butonu mikrofon hoparlör devre elemanları tamir`
+- `domofon dzwoni w innych mieszkaniach po naciśnięciu przycisku jednego lokalu przyczyna usterka przewody dzwonka`
+- `домофон при нажатии на кнопку квартиры звонят другие квартиры причина неисправность общий провод`
+- `Klingelanlage Türsprechanlage Klingeltaster betätigt mehrere Wohnungen klingeln Fehlersuche Nebenschluss Ader Ursache`
+- `Fermax Golmar 4+n intercom wiring terminals common call wire per apartment fault finding manual`
+- `two-wire BUS door entry system principle address coding cabling limits troubleshooting manufacturer technical manual audio`
+
+Not: "H.E.PCB.01032" sorgudaki parça numarası tahminidir, kaynaktan alınmadı; sonuç vermedi.
+Henüz taranmayan: IT, FR.
