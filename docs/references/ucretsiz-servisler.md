@@ -18,10 +18,14 @@ Canlı liste: ihtiyaç doğdukça eklenir. Her satır kaynaklı; fiyat/limit de�
 | CI / zamanlanmış iş | [GitHub Actions](https://docs.github.com/en/billing/concepts/product-billing/github-actions) | Public repoda standart runner ücretsiz. Özel repoda GitHub Free'de 12$ değerinde ayda dahil kullanım, 500 MB artifact | — | Public repoda log ve artifact herkese açık olabilir: yedek dökümü orada saklama | Kullanım koşulları GitHub ToS | Yüksek |
 | Veritabanı | Supabase Free | Bkz. `supabase-vercel-yapilabilecekler.md` | Pro 25$ (**20$ üstü**) | 1 hafta etkinliksizlikte durur, yedek yok | Aranmadı | Yüksek |
 | Barındırma | Vercel Hobby | Bkz. aynı dosya | Pro 20$/ay | **Ticari kullanım yasak** | Hayır (kural) | Yüksek |
+| Ses → yazı (sahada dikteyle not) | [Spokenly](https://spokenly.app/pricing) | iPhone dahil (iOS 16.4+, özel klavye). Cihaz üstü Whisper/Parakeet modelleri sınırsız ve ücretsiz, hesap gerekmez; 100+ dil, otomatik algılama. Kendi API anahtarınla Spokenly ücret almaz, sağlayıcı kullanıma göre faturalar | Local+ 29$ tek seferlik (senkron, ek stil); Pro 12$/ay yıllık ödemeyle, 15$ aylık (bulut model + yapay zekâ temizleme) | Fiyat kaynaklarda farklı (resmî site 12$/15$, bir inceleme 9,99$, App Store 9,99–10,99$): tarih farkı olabilir, kesin değil. iPhone'da 700 MB üstü Whisper modeli çalışmayabilir (nicelenmiş ~547 MB önerilir). **Türkçe doğruluğu denenmedi: Doğrulanmadı.** Bulut modelde ses sağlayıcıya gider; müşteri adı/adres dikte etme | Resmî sayfada kısıtlama belirtilmedi (hesap paylaşımı yasak) | Yüksek (özellik/fiyat), Doğrulanmadı (Türkçe kalite) |
 | Yapay zekâ (kodlama) | [Claude Pro](https://claude.com/pricing?mode=code) | Ücretsiz planda Claude Code **yok** | Pro 20$/ay (yıllık 17$/ay): Claude Code dahil; sohbet ve Code aynı kotayı paylaşır; 5 saatlik + haftalık limit | Üst model (Fable) Pro'da yalnız kullanım kredisiyle. Limit dolunca bekle veya kredi al | — | Yüksek |
 
+## Kategori mantığı
+Liste e-postayla sınırlı değil: ihtiyaç doğdukça yeni kategori açılır (ses→yazı, depolama, CI, yapay zekâ...). Her satırda aynı sorular: ücretsiz katman, ≤ ~20$ katman, tuzak/durma davranışı, ticari kullanım, güven.
+
 ## Henüz taranmayan kategoriler (sıradaki turlar)
-SMS (Türkiye operatör fiyatı), harita/geokodlama, PDF üretimi, otomasyon (webhook/zamanlayıcı), hata izleme/izleme, saha formu/ yedek bulut, alan adı/DNS. Hepsi **Doğrulanmadı** (aranmadı).
+Hepsi **Doğrulanmadı** (aranmadı): SMS (Türkiye fiyatı), harita/geokodlama, PDF üretimi/OCR, fotoğraf ölçüm/etiketleme, otomasyon (webhook/zamanlayıcı), hata izleme, çevrimdışı not/yedek, alan adı/DNS, kamera/CCTV araçları (Hikvision, ayrı iş kolu), antenli uydu açı bulucu (satfinder ayrı projede).
 
 ## Kullanım ilkesi
 1. Önce ticari kullanım koşuluna bak (BEE iş aracıdır).
