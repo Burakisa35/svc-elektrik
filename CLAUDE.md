@@ -11,6 +11,9 @@ Bu dosya hem Claude Code hem sohbet tarafındaki Claude için bağlayıcıdır. 
 | `docs/briefs/**`, `docs/decisions/**` | Claude (sohbet) yazar, Burak iletir | Code okur, uygular |
 | `src/**`, `supabase/migrations/**`, UI, importer, build | Claude Code | Sohbet Claude'u **dokunmaz** |
 | `index.html` (mevcut site) | Claude Code — **tümüyle yeniden yazılacak** (yama değil, sıfırdan tasarım) | Sohbet Claude'u dokunmaz |
+| `.claude/hooks/*-test.sh` (koruma testleri, bozma testi dahil) | Claude Code | — |
+| `.claude/hooks/koruma.py`, `.claude/settings.json` | Claude Code önerir; **Burak onayıyla, PR ile** girer (Burak, 2026-11-07) | Code kendi korumasını tek başına gevşetemez |
+| `TESLIMLER.md` (teslim kaydı) | Claude Code: "Durum" sütunu | Sohbet Claude'u: "Denetim" sütunu (kapanış kararı) |
 | Karar, öncelik, saha doğrulaması | Burak | — |
 
 Kurallar:
@@ -50,14 +53,13 @@ Arayüz ve dokümanlar Türkçe. Kısa, doğrudan, dolgusuz. Kod yorumları Tür
 
 ## Komutlar
 
-Hepsi repo kökünden çalışır ve 2026-11-07'de denendi.
+**Oturum başı (Code):** `TESLIMLER.md` ve `git log --oneline -10` okunur, sonra `bash araclar/dogrula.sh` çalıştırılır. KALDI satırı varken yeni iş açılmaz.
+**Teslim:** bir madde ancak kanıtı (komut çıktısı ya da commit) varsa "teslim edildi" yazılır. Kapanış kararı denetleyenindir (`TESLIMLER.md` "Denetim" sütunu).
 
 ```bash
-bash .claude/hooks/koruma-test.sh          # koruma hook'u testi (24 vaka, kalan=0 olmalı)
-for f in src/api/*.js src/assets/js/*.js; do node --check "$f"; done   # JS sözdizimi
-md5sum supabase/migrations/*.sql           # canlıdaki MD5 ile karşılaştırma: supabase/CLAUDE.md
+bash araclar/dogrula.sh    # tek komut: hook testi, JS sözdizimi, migration kimlik kapısı, TESLIMLER bütünlüğü (5 kontrol, ~2 sn)
 ```
-DB erişim testi (`supabase/tests/db-erisim.sql`) SQL Editor'den çalıştırılır; ayrıntı `supabase/CLAUDE.md`.
+Canlı DB kontrolleri (migration MD5'i, `supabase/tests/db-erisim.sql` erişim testi) yerelde koşmaz; MCP ya da SQL Editor ile yapılır: `supabase/CLAUDE.md`. Tümü 2026-11-07'de denendi.
 Koruma: `.claude/settings.json` hook'u, Code'un `knowledge/` ve `docs/` yazmasını Edit/Write **ve** Bash'te engellemek için yazıldı. Birim testinde engelliyor (Yüksek). Canlı oturumda engellediği **Doğrulanmadı**: 2026-11-07'deki iki oturumda deneme engellenmedi; oturumlar repo kökünde açılmadığı için hook yüklenmemiş olabilir (Orta). Yolu metinde geçmeyen betikle yazma yakalanmaz.
 
 ## Dizin haritası
@@ -72,4 +74,6 @@ docs/quality/      kalite kapıları ve bulgu kayıtları
 docs/references/   Supabase, Vercel, CLAUDE.md kullanım rehberleri (src/ ve supabase/ işinden önce oku)
 src/               uygulama (Claude Code); durum ve kurallar src/CLAUDE.md
 supabase/          migration'lar + DB testi (Claude Code); supabase/CLAUDE.md
+TESLIMLER.md       brief teslim kaydı: Code durum yazar, denetleyen kapatır
+araclar/           tek komutluk doğrulama (Claude Code): araclar/dogrula.sh
 ```
