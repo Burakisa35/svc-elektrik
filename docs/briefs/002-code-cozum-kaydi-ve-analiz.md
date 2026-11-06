@@ -35,9 +35,9 @@ Kaynak istek: Burak, 2026-11-07 01:30 — marka arıza ailelerinin listelenmesi,
 - Mevcut `index.html`'e yama yok; tasarım sıfırdan (kök CLAUDE.md).
 - Migration dosya olarak yazılır, uygulama önce Burak'a sorulur (kök CLAUDE.md kural 4).
 
-## 5. Açık sorular (Burak karar verecek)
+## 5. Açık sorular ve kararlar
 
-1. Müşteri/adres bilgisi vakada tutulsun mu, tutulursa analizde gizli mi? (Önerim: tutulur, analizde varsayılan gizli.)
+1. ~~Müşteri/adres bilgisi vakada tutulsun mu?~~ **Karar (Burak, 2026-11-07 01:33):** tutulur; analiz görünümlerinde ve dışa aktarımda varsayılan olarak gizli.
 2. "Aktif süre" için duraklatma düğmesi yeterli mi, yoksa yalnız açılış-kapanış farkı mı yeter?
 3. Eski (kağıtta/bellekte) vakalar geriye dönük girilecek mi? Girilirse damgalar "tahmini" işaretlenmeli.
 
