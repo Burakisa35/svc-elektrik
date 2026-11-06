@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    { "source": "/giris", "destination": "/giris.html" },
+    { "source": "/panel", "destination": "/panel.html" },
+    { "source": "/is", "destination": "/is.html" },
+    { "source": "/api/submit", "destination": "/api/public.js?fn=submit" },
+    { "source": "/api/job-status", "destination": "/api/public.js?fn=job-status" }
+  ],
+  "headers": [
+    {
+      "source": "/styles/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "max-age=0, must-revalidate" }]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "max-age=0, must-revalidate" }]
+    }
+  ]
+}
