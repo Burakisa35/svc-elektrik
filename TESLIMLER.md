@@ -33,6 +33,7 @@ Durum: **tamam** (kanıtı var) · **kısmen** · **bekliyor** (karar ya da izin
 | 002 Arıza çözüm kaydı | Code | başlanmadı (G2/G3 kapısını ve Burak onayını bekliyor) |
 | 005 Soru sistemi | Code | başlanmadı (006 bitmeden başlanmaz) |
 | 007 Tasarım kimliği | Code | başlanmadı (006/1 ve 006/2 kapanmadan başlanmaz; 006/2 izin bekliyor) |
+| 008 Test düzeni | Code | başlanmadı (aynı koşul). Okundu. Bölüm 6'daki sıra: T0 → T1 → T3 → T4 → T1b → T2. İnceleme `7efd02d`'ye dayanıyor; o zamandan bu yana sayaç sorunu [0c19075](https://github.com/burakisa35/svc-elektrik/commit/0c19075)'te çözüldü |
 
 ## Brief dışı (Burak'ın doğrudan istekleri)
 | Konu | Commit | Durum |
