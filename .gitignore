@@ -1,0 +1,16 @@
+# Sırlar ve yerel ayarlar
+.env
+.env.*
+!.env.example
+.vercel/
+CLAUDE.local.md
+.claude/settings.local.json
+# Yedek ve veri dökümleri (müşteri verisi repoya girmez)
+*.dump
+*.backup
+*.sql.gz
+yedek/
+dump/
+# Sistem
+.DS_Store
+node_modules/
