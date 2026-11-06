@@ -14,6 +14,7 @@
 | `knowledge/` | Araştırma bilgi tabanı (güven etiketli) | Claude (sohbet) |
 | `docs/briefs/` | Araştırma ve tasarım brief'leri | Claude (sohbet) |
 | `docs/decisions/` | Karar kayıtları | Claude (sohbet) + Burak |
+| `docs/references/` | Araç rehberleri (CLAUDE.md, Supabase, Vercel); resmî kaynaklı | Claude (sohbet) |
 | `docs/quality/` | Kalite kapıları, denetim bulguları | Claude (sohbet), ayrı denetçi oturum |
 | `src/`, `supabase/` | Uygulama ve veritabanı | Claude Code |
 

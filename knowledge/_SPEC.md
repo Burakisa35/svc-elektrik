@@ -10,6 +10,7 @@ Amaç: Markdown dosyalarının hem insan tarafından okunması hem Claude Code i
 | `brands/` | `brand_model` | `brand_model`, `terminal_map` |
 | `fault-cases/` | `fault_case` | `fault_case`, `test_step` |
 | `sources/` | `source` | kaynak kataloğu |
+| `sources/arama-gunlugu.md` | `log` | importer atlar |
 
 Saha raporları (`field_report`) uygulamada üretilir, burada dosya olarak tutulmaz; bulgu doğrulanınca ilgili `fault_case` kaydına işlenir.
 

@@ -57,6 +57,7 @@ knowledge/         araştırma bilgi tabanı (Claude sohbet sahibidir)
 docs/briefs/       araştırma ve tasarım brief'leri
 docs/decisions/    kısa karar kayıtları (ADR)
 docs/quality/      kalite kapıları ve bulgu kayıtları
+docs/references/   Supabase, Vercel, CLAUDE.md kullanım rehberleri (src/ ve supabase/ işinden önce oku)
 src/               uygulama (Claude Code) — henüz yok
 supabase/          migration'lar (Claude Code) — henüz yok
 ```
