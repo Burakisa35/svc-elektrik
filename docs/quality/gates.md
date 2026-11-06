@@ -24,6 +24,7 @@
 - [ ] 390 px genişlikte tek elle kullanılabilir; dokunma hedefleri yeterli
 - [ ] Çevrimdışı/zayıf internette bilgi okunabiliyor
 - [ ] Gizli anahtar repoda yok
+- [ ] Ekran içeren PR: `ekran-sablonu.md` B ve C bölümleri işaretli; **E** satırlarının hepsi VAR (kanıtlı)
 
 ## G4 — Saha
 - [ ] Gerçek bir arızada akış baştan sona denendi
