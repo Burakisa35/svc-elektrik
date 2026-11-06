@@ -55,6 +55,7 @@ saha çalışma sistemi**. İkisi aynı PWA'da çalışır ama erişim sınırla
 | Migration 0000 (kimlik) + 0001 (operasyon çekirdeği) | **Canlıda uygulandı** | `list_migrations` · uygulanan SQL'in MD5'i repodaki dosyayla birebir aynı |
 | Migration 0002 (sahip işlemleri veritabanı fonksiyonu, service_role yok) | **Canlıda uygulandı** | MD5 dosyayla aynı |
 | Migration 0003 (PBKDF2 600k giriş, atomik sayaç, çıkışta oturum iptali) | **Canlıda uygulandı** | MD5 dosyayla aynı |
+| Migration 0004 (Modül 1 saha: istemci_id, ad/telefon yeterli, ertelendi/kaçırıldı, engel, tahmini bedel, kurulum kodu, silinmezlik) | ⚠️ **YAZILDI, UYGULANMADI** — Supabase onay sorusu cevapsız | `list_migrations`'ta yok |
 | Veritabanı erişim testleri | **38/38 geçti** · 3 bozma testiyle sınandı (0001 için) | `tests/db-erisim.sql` |
 | Dışarıdan HTTP erişimi (publishable key) | Bütün tablolar 401 · kapısız RPC 401 | Bkz. "Doğrulama" |
 | 2. aşama (ölçüm · malzeme · finans) | **Yalnız tasarım — şema YOK** | `docs/VERI_MODELI.md` §4 |
