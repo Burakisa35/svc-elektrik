@@ -12,12 +12,12 @@ Etiketler: **Yüksek** = Anthropic resmî dokümanı; **Orta** = ön baskı/çal
 
 | Bulgu | Kaynak | Güven |
 |---|---|---|
-| Bağlam dosyası görev başarısını genel olarak artırmıyor, çıkarım maliyetini ortalama %20'nin üstünde artırıyor. LLM üretimi dosyalar başarıyı hafif düşürüyor (SWE-bench'te ~0,5, CTXbench'te ~2 puan; ikisi de anlamsız fark). Geliştirici yazısı dosyalar ~%2,4 artış (p=0,21, anlamsız), Claude Code'da artış yok. Talimatlar iyi izleniyor (daha çok test, daha çok keşif); **depo genel bakışı bölümleri yardımcı olmuyor** | Gloaguen vd., arXiv:2602.11988 | Orta |
-| 17 görev, iki ajan (Claude Code, Codex), 288 değerlendirilmiş koşu: bağlam enjeksiyon stratejisi doğruluğu ölçülebilir biçimde oynatmıyor (fark ≤ 10–15 puan sınırı, güç yetersiz). Görevler çoğunlukla "depo bilgisi eksikliği"nden değil uygulama becerisinden başarısız oluyor | Khatri, ACL Anthology REALM 2026 (2026.realm-1.5) | Orta |
-| Farklı yönde: AGENTS.md ile medyan süre %28,6, çıktı token'ı %16,6 düşük (124 PR, 10 depo); toplam token medyanı ise +%1,3 | Chatlatanagulchai vd., arXiv:2601.20404 | Orta |
+| Bağlam dosyası görev başarısını genel olarak artırmıyor, LLM üretimi dosyalarda çıkarım maliyetini ~%20–23 artırıyor (geliştirici dosyalarında en fazla ~%19). LLM üretimi dosyalar başarıyı hafif düşürüyor (SWE-bench'te ~0,5, CTXbench'te ~2 puan; p=0,87 ve 0,37, istatistiksel olarak anlamlı değil). Geliştirici yazısı dosyalar ~%2,4 artış (p=0,21, istatistiksel olarak anlamlı değil). Talimatlar iyi izleniyor (daha çok test, daha çok keşif); depo genel bakışı bölümlerinin, ilgili dosyaya ulaşmayı hızlandırmadığı bildiriliyor (ölçüm kapsamı: ulaşma adımı, Python depoları) | Gloaguen vd., arXiv:2602.11988 | Orta |
+| 17 görev, iki ajan (Claude Code, Codex), 288 değerlendirilmiş koşu: bağlam enjeksiyon stratejisi doğruluğu ölçülebilir biçimde oynatmıyor (fark ≤ 10–15 puan sınırı, güç yetersiz). Görevler çoğunlukla "depo bilgisi eksikliği"nden değil uygulama becerisinden başarısız oluyor | Khatri, ACL Anthology REALM 2026 (2026.realm-1.5); 3 depo | Orta |
+| Ek bulgu: AGENTS.md ile medyan süre %28,6 ve çıktı token'ı %16,6 düşük (124 PR, 10 depo); toplam token farkı anlamlı değil | Lulla vd., arXiv:2601.20404 | Orta |
 | Özet: dosya doğruluğu belirgin artırmıyor, **hızı/süreci** etkileyebilir; içerik yönü belirliyor; ajan talimata neredeyse mekanik uyuyor | Orvii/context-file-evidence (derleme, ben doğrulamadım) | Doğrulanmadı |
 
-Sınır: çalışmalar çoğunlukla Python kütüphane depolarında görev çözme ölçüyor. Bizim depo bilgi tabanı + rol sınırı içeriyor; bu, "standart olmayan kural" sınıfına giriyor ve çalışmaların önerdiği tek faydalı içerik türü bu.
+Sınır: çalışmalar çoğunlukla Python kütüphane depolarında görev çözme ölçüyor. Bizim depo bilgi tabanı + rol sınırı içeriyor; bu, "standart olmayan kural" sınıfına giriyor; çalışmalar talimatların izlendiğini gösteriyor, bu içerik türünün ayrıca fayda sağladığı ölçülmedi.
 
 ## B. Resmî mekanizmalar (Yüksek)
 
@@ -31,12 +31,12 @@ Sınır: çalışmalar çoğunlukla Python kütüphane depolarında görev çöz
 
 - İzin kuralları Claude Code tarafından uygulanır, model tarafından değil; CLAUDE.md "ne denesin"i şekillendirir, "ne yapabilir"i değiştirmez. Sıra: deny → ask → allow, ilk eşleşen kazanır (Yüksek).
 - PreToolUse hook `deny` kararı `bypassPermissions` dahil her modda geçerli; exit kodu 2 engeller, stderr mesajı Claude'a geri bildirim olur. Aynı olay için eşleşen tüm hook'lar çalışır; en kısıtlayıcı karar geçer (Yüksek).
-- **Sınır (önemli):** `Read`/`Edit` deny kuralları yerleşik dosya araçlarını ve `cat/head/tail/sed` gibi yaygın komutları kapsıyor, ama dosyayı kendisi açan keyfî bir Python/Node betiğini kapsamıyor. Bash komutu da yazma yolu olduğundan `Edit|Write` eşleştiricisi tek başına `echo > knowledge/x.md` gibi yazmaları yakalamaz; Bash komut metnini inceleyen hook veya sandbox gerekir (castel.studio, anomity.ai ikincil kaynaklar: Orta; sandbox'ın Bash ve alt süreçlere uygulandığı resmî izin dokümanında geçiyor: Yüksek).
+- **Sınır (önemli):** `Read`/`Edit` deny kuralları yerleşik dosya araçlarını ve `cat/head/tail/sed` gibi yaygın komutları kapsıyor, ama dosyayı kendisi açan keyfî bir Python/Node betiğini kapsamıyor. Bash komutu da yazma yolu olduğundan `Edit|Write` eşleştiricisi tek başına `echo > knowledge/x.md` gibi yazmaları yakalamaz; Bash komut metnini inceleyen hook veya sandbox gerekir (castel.studio, anomity.ai ikincil kaynaklar). Resmî hooks-guide: Edit|Write eşleştiricisi Bash'i yakalamaz (Yüksek); izin dokümanı: Edit deny kuralı `>`/`tee` yönlendirmesini de kapsar, sandbox alt süreçlere uygulanır (Yüksek, denetçi teyidi). Seçenekler: `permissions.deny Edit(knowledge/**)` + sandbox. Rules'ta yol kapsamsız olanın yeniden enjekte edildiği doğrulandı; `paths:` kapsamlıların davranışı belirsiz (Doğrulanmadı).
 - `permissions.deny` kurallarının bazı sürümlerde sessizce uygulanmadığına dair GitHub issue bildirimleri (#27040, #6699) var (agentpatterns.ai üzerinden): **Doğrulanmadı**, ben issue'ları açmadım. Sonuç: hook'u kurunca *denenmeli* (Claude'a yasak dosyaya yazdırıp engellendiği görülmeli).
 
-## D. Bu depo için çıkarımlar (Orta, ölçülmedi)
+## D. Bu depo için çıkarımlar (Doğrulanmadı, ölçülmedi)
 
-1. Kök CLAUDE.md'deki **"Dizin haritası"** bir depo genel bakışıdır; ölçümler bu tür içeriğin faydasız olduğunu gösteriyor ve her satır bağlam harcıyor. Aday: kısalt veya kaldır; karar için ölçüm (aşağıda brief 003, soru K3).
+1. Kök CLAUDE.md'deki **"Dizin haritası"** bir depo genel bakışıdır; ölçümler bu tür içeriğin ulaşmayı hızlandırmadığını bildiriyor, ama bu harita sahiplik bilgisi de taşıyor; her satır bağlam harcıyor. Aday: kısalt veya kaldır; karar için ölçüm (aşağıda brief 003, soru K3).
 2. **Rol tablosu ve "Code knowledge/'a yazmaz"** standart olmayan, koddan çıkarılamayan kural: tutmaya değer; ama metin yetmez, hook gerekir ve Bash yolu dahil denenmeli.
 3. `/init` ile üretilmiş dosya önerisi, ölçümler karşısında zayıf: LLM üretimli bağlam dosyaları gerçek fayda göstermedi. Code'dan `src/CLAUDE.md`'yi **/init çıktısı olarak değil**, yalnız koddan çıkarılamayan komut/tuzak satırlarıyla yazması istenmeli.
 4. Alt dizin CLAUDE.md'ler sıkıştırmada kaybolur → *rol sınırı gibi her zaman geçerli kurallar kök dosyada veya yol kapsamsız `.claude/rules/` içinde* durmalı; `knowledge/CLAUDE.md` yalnız knowledge'a özgü yazım kurallarını taşımalı.
