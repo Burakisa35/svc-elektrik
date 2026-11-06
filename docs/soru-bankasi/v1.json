@@ -1,0 +1,97 @@
+{
+  "banka_surumu": 1,
+  "tarih": "2026-11-07",
+  "durum": "pilot (3 gün)",
+  "kurallar": {
+    "istem_basina_en_fazla_soru": 3,
+    "derinlestirme_en_fazla_seviye": 2,
+    "istem_suresi_dolar": true,
+    "cevap_tek_dokunus": true
+  },
+  "slotlar": {
+    "sabah": "günün ilk açılışı",
+    "aksam": "16:00 sonrası ilk açılış",
+    "gun_sonu_geri_bildirim": "yalnız pilot günleri 1-3, akşam sorularından sonra",
+    "cuma": "cuma günü ilk açılış, özet ekranından sonra"
+  },
+  "sorular": [
+    {
+      "id": "Q-S1", "surum": 1, "slot": "sabah", "tip": "tek_secim",
+      "kisa": "En çok zaman alacak iş",
+      "metin": "Bugün en çok zamanı ne alacak?",
+      "secenekler": ["yol", "malzeme", "arıza teşhisi", "kurulum / montaj", "müşteriyle yazışma / arama", "ödeme / teklif", "belli değil"],
+      "amac": "Beklentiyi kaydet; akşamki gerçekle karşılaştır"
+    },
+    {
+      "id": "Q-S2", "surum": 1, "slot": "sabah", "tip": "tek_secim",
+      "kisa": "Planlı iş sayısı",
+      "metin": "Bugün kaç iş planlı?",
+      "secenekler": ["0", "1", "2", "3", "4 veya fazla"],
+      "amac": "Günün yoğunluğu: kayıp dakikayı iş başına normalleştirmek için"
+    },
+    {
+      "id": "Q-A1", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "En çok zaman kaybettiren",
+      "metin": "Bugün en çok zamanı ne kaybettirdi?",
+      "secenekler": ["yol", "malzeme", "arıza teşhisi", "kurulum / montaj", "müşteriyle yazışma / arama", "ödeme / teklif", "kayıp yok"],
+      "amac": "S1 kanıtı: acı nerede"
+    },
+    {
+      "id": "Q-A2", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "Kayıp süre",
+      "metin": "Yaklaşık kaç dakika?",
+      "secenekler": ["15", "30", "60", "90 veya fazla"],
+      "tetik": { "sonra": "Q-A1", "deger_degilse": ["kayıp yok"] },
+      "amac": "Kayıp büyüklüğü"
+    },
+    {
+      "id": "Q-A2b", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "Önceden bilinebilir miydi",
+      "metin": "Bunu önceden bilebilir miydin?",
+      "secenekler": ["evet", "belki", "hayır"],
+      "tetik": { "sonra": "Q-A2", "deger_ise": ["60", "90 veya fazla"] },
+      "derinlik": 2,
+      "amac": "Kaçınılabilirlik: 60 dk ve üstü kayıplarda kök neden ayrımı (5 Neden yöntemi, en fazla 2 seviye)"
+    },
+    {
+      "id": "Q-A3", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "Ek iş çıktı mı",
+      "metin": "Bugün işe ek iş eklendi mi?",
+      "secenekler": ["evet", "hayır"],
+      "amac": "Ek iş sıklığı. Hipotez: ödeme gecikmesi ek işle başlıyor (Doğrulanmadı)"
+    },
+    {
+      "id": "Q-A3a", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "Ek iş onayı",
+      "metin": "Ek iş için onay nasıl alındı?",
+      "secenekler": ["yazılı (mesaj / not)", "teklifle", "sözlü", "alınmadı"],
+      "tetik": { "sonra": "Q-A3", "deger_ise": ["evet"] },
+      "amac": "Onay biçimi ile ödeme gecikmesi ilişkisi"
+    },
+    {
+      "id": "Q-A3b", "surum": 1, "slot": "aksam", "tip": "tek_secim",
+      "kisa": "Onay neden yazılı değil",
+      "metin": "Neden yazılı olmadı?",
+      "secenekler": ["unuttum", "zaman yoktu", "gerek görmedim", "müşteri kabul etmedi", "diğer"],
+      "tetik": { "sonra": "Q-A3a", "deger_ise": ["sözlü", "alınmadı"] },
+      "derinlik": 2,
+      "amac": "Engelin nedeni: süreç mi, alışkanlık mı, müşteri mi"
+    },
+    {
+      "id": "Q-M1", "surum": 1, "slot": "gun_sonu_geri_bildirim", "tip": "coklu_secim",
+      "kisa": "Net olmayan soru",
+      "metin": "Bugünkü sorulardan hangisi net değildi?",
+      "secenekler": ["hepsi net", "En çok zaman alacak iş", "Planlı iş sayısı", "En çok zaman kaybettiren", "Kayıp süre", "Önceden bilinebilir miydi", "Ek iş çıktı mı", "Ek iş onayı", "Onay neden yazılı değil"],
+      "serbest_metin_izinli": true,
+      "amac": "3 günlük iyileştirme girdisi (tek istem, soru başına ayrı istem yok)"
+    },
+    {
+      "id": "Q-C1", "surum": 1, "slot": "cuma", "tip": "tek_secim",
+      "kisa": "Haftanın deneyi",
+      "metin": "Önerilen deneyi önümüzdeki hafta dener misin?",
+      "secenekler": ["evet", "hayır", "değiştirerek"],
+      "serbest_metin_izinli": true,
+      "amac": "Cuma özetindeki tek öneriyi kapatır"
+    }
+  ]
+}
