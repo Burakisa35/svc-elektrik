@@ -6,5 +6,5 @@ class: forum
 language: de
 retrieved: 2026-11-07
 reliability: Doğrulanmadı
-note: Siedle 1+n, 11 daire; bir butona basınca birkaç/tüm telefonlar çalıyor. Katılımcılar daire başına bir çağrı teli (7.1-7.11) olduğunu ve iki telin birbirine değmesinin ikisini de çaldıracağını yazıyor; ortak dönüşün havada kalması da öneriliyor. Konu sahibi kök nedeni bildirmedi (teyit yok). H1 için analoji, mekanizma iddiası forum yorumu. Arama özetinden okundu.
+note: Siedle TLM 511 NG 402-2, 11 ev telefonu; sistem adı ('1+n' vb.) kaynakta geçmiyor (Doğrulanmadı). Bir butona basınca birkaç ya da tüm telefonlar çalıyor. Bir katılımcı, her katılımcı için bir tel olduğunu (7.1-7.11) ve iki telin değmesinin ikisini de çaldıracağını yazıyor; ortak dönüşün aralıklı havada kalması ihtimali de bir ipucu olarak sorulmuş. Başka bir katılımcı bükme-bantlı eklerin zamanla bozulmasını anlatıyor. Konu sahibi kök nedeni bildirmedi (teyit yok). H1 için yalnız analoji. Arama özetinden okundu, denetimde sayfa açıldı.
 ---

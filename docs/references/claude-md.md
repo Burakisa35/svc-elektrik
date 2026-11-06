@@ -18,6 +18,8 @@ Kaynaklar: [Memory](https://code.claude.com/docs/en/memory) · [Best practices](
 | Somut yaz: "2 boşluk girinti" iyi, "düzgün biçimle" kötü; çelişen talimatlar rastgele seçilir | Yüksek |
 | `/init` başlangıç üretir, `/doctor prompt-audit` eskimiş/çelişen satırları bulur, `/context all` yüklendiğini doğrular | Yüksek |
 
+Uyarı (2026-11-07): LLM üretimli bağlam dosyalarının (`/init` gibi) görev başarısını artırmadığı, maliyeti yükselttiği ölçümleri var; bkz. `context-dosyalari-literatur.md` bölüm A. `/init` çıktısını olduğu gibi kullanma, yalnız koddan çıkarılamayanı tut.
+
 ## Bu proje için uygulama
 1. **Rol sınırı hook'a bağlanmalı.** Kök `CLAUDE.md`'deki "Code `knowledge/`'a yazmaz" kuralı istisnasız; yalnız metin olarak bırakılırsa "çoğu zaman" uyulur. Claude Code görevi: `.claude/settings.json` içinde `knowledge/**` ve `docs/**` yazımını engelleyen PreToolUse hook. (Orta: ilkeden uyarlama)
 2. **Komut bölümü eksik.** Kök CLAUDE.md'de build/test/deploy komutları yok çünkü yığın henüz belli değil (Doğrulanmadı). Code'un ilk işi: komutları `## Komutlar` altına eklemek, 200 satır sınırını korumak. (Orta)

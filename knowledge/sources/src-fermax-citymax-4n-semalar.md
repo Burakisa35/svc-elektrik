@@ -6,5 +6,5 @@ class: uretici
 language: en
 retrieved: 2026-11-07
 reliability: Yüksek
-note: Fermax Citymax 4+N şema el kitabı (üçüncü taraf barındırma, üretici belgesi). 4 ortak tel + daire başına 1 çağrı teli; butona basınca amplifikatörde üretilen çağrı sinyali (Cp1) çağrı hattıyla ilgili telefona gider. Tanılama önerisi: arızalı telefonu doğrudan amplifikatöre bağlayıp kurulumu eleme. Başka marka, analoji. Arama özetinden okundu.
+note: Fermax Citymax 4+N şema el kitabı (üçüncü taraf barındırma, üretici belgesi). 4 ortak tel + daire başına 1 çağrı teli; butona basınca amplifikatörde üretilen çağrı sinyali (Cp1) çağrı hattıyla ilgili telefona gider. 'Arızalı telefonu doğrudan amplifikatöre bağla' önerisi SES sorunları içindir; kaynağa göre sonuç genelde kullanılan kablolarda kesit yetersizliğidir. Çağrı/çapraz çalma tanısı için kullanılmaz. Başka marka, yalnız topoloji analojisi. Arama özetinden okundu.
 ---

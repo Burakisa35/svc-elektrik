@@ -6,5 +6,5 @@ class: uretici
 language: en
 retrieved: 2026-11-07
 reliability: Yüksek
-note: Golmar 4+N kurulum kılavuzu (satıcı sitesinde barındırılan üretici PDF). Çağrı telleri ve buton ortağı CP klemensine bağlanır; aynı dairede paralel her cihaz için çağrı teli kesiti iki katına çıkarılır (daire başına en fazla 3 cihaz); sorun giderme: "çağrı alınmıyor" -> CP bağlantısı. Başka marka, yalnız topoloji analojisi. Arama özetinden okundu.
+note: Golmar 4+N kurulum kılavuzu (satıcı sitesinde barındırılan üretici PDF). Paralel her cihaz için çağrı teli kesiti iki katına çıkarılır, daire başına en fazla 3 cihaz. 'Çağrı/çağrı onayı yok' adımı (çağrı telleri ve buton ortağının ses modülünün CP klemensine bağlanması) yalnız Stadio Plus panelleri için geçerli. Sorun giderme: hiçbir şey çalışmıyorsa TF-104 trafosunun SEC çıkışı 12-17 V AC olmalı; değilse trafoyu kurulumdan ayırıp tekrar ölç, ayrılınca doğruysa kurulumda kısa devre vardır. Başka marka, yalnız topoloji/besleme analojisi. Arama özetinden okundu.
 ---

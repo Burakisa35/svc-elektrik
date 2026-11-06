@@ -6,5 +6,5 @@ class: forum
 language: de
 retrieved: 2026-11-07
 reliability: Doğrulanmadı
-note: Siedle. Farklı belirti (kat zili hep aynı daireyi çaldırıyor). Katılımcı, butona paralel bağlanan ışıklı lambanın basılmamış butonu sonsuz dirençten omik yüke çevirdiğini ve sistemi bozduğunu yazıyor (kendi önceki vakası). H4 (aydınlatmalı buton geri beslemesi) için analoji; tek kaynak.
+note: Siedle. Farklı belirti (kat zili hep aynı daireyi çaldırıyor). Arama özetine göre bir katılımcı, butona paralel bağlanan ışıklı lambanın basılmamış butonu sonsuz dirençten omik yüke çevirdiğini ve sistemi bozduğunu yazıyor (kendi önceki vakası). G1 tur 2 denetiminde URL açılamadı (client_error): içerik doğrulanmadı, yalnız arama özetine dayanıyor, yeniden denenecek. H4 için zayıf analoji; tek kaynak, vaka dosyasında kullanılmadı.
 ---

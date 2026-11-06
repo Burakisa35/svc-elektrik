@@ -7,16 +7,16 @@ Kaynak istek: Burak, 2026-11-07 01:30 — marka arıza ailelerinin listelenmesi,
 ## 1. Burak sahada şunu yapabilmeli (kabul ölçütü)
 
 1. Bir arıza vakası açıp **belirtiyi aileden** seçebilmeli (F1…), sonra **soruları** (Q-…) seçmeli cevapla, tek elle, yazı yazmadan yanıtlayabilmeli.
-2. Uygulama, cevaplara göre hangi hipotezlerin canlı/elenmiş olduğunu göstermeli (hipotez durumu elle işaretlenir; uygulama otomatik tanı **koymaz**).
+2. Uygulama, vakanın hipotezlerini (H1…) ve her test adımının "neyi eler" metnini göstermeli; hipotez durumunu (canlı / elendi / doğrulandı) **Burak elle işaretler**. Cevap → hipotez otomatik eşlemesi yoktur ve uygulama tanı **koymaz**; böyle bir eşleme gerekirse önce bilgi tabanına makine okunur biçimde eklenir (G2 işi).
 3. Her test adımını bitirdiğinde tek dokunuşla işaretleyebilmeli; **saat:dakika** otomatik kaydedilmeli, elle düzeltilebilmeli.
-4. Vakayı "çözüldü / kısmen / çözülemedi / bekliyor" ile kapatabilmeli, kök neden sınıfını ve **sahada doğrulandı mı** bilgisini girebilmeli.
+4. Vakayı "çözüldü / kısmen / çözülemedi / bekliyor" ile kapatabilmeli (kayıt değerleri `cozuldu / kismen / cozulmedi / bekliyor`), kök neden sınıfını ve **sahada doğrulandı mı** (`field_verification`) bilgisini girebilmeli.
 5. Kapanıştan sonra **tekrar kontrol tarihi** koyabilmeli; arıza geri geldiyse aynı vakayı yeniden açabilmeli (yeni vaka değil, zincir).
 6. Zayıf internette vaka açabilmeli ve adımları kaydedebilmeli; bağlantı gelince eşitlenmeli.
 7. Geçmiş vakalardan şunu görebilmeli: marka/aile bazında **çözüm süresi**, **hangi hipotez kaç kez doğrulandı**, **hangi adım çözümü en çok getirdi**, tekrar eden arızalar.
 
 ## 2. Bilgi tabanından gelen kimlikler (değiştirme)
 
-`knowledge/_SPEC.md` "Çözüm kaydı sözlüğü" ve `knowledge/fault-families/*.md`: `family_id`, `question_id`+cevap, `hypothesis_id`, `step_id`, `outcome`, `root_cause_class`, `field_verified`. Importer bu dosyaları okur; **içeriği düzenlemez**. Aile/soru/hipotez kodları kalıcıdır; kaldırılanlar `status: kaldirildi` ile gelir, kayıtlar bozulmamalı.
+`knowledge/_SPEC.md` "Çözüm kaydı sözlüğü" ve `knowledge/fault-families/*.md`: `family_id`, `question_id`+cevap, `hypothesis_id`, `step_id`, `outcome`, `root_cause_class`, `field_verification`. Importer bu dosyaları okur; **içeriği düzenlemez**. Aile/soru/hipotez/adım kodları kalıcıdır (SPEC'te tanımlı); kaldırılanlar `status: kaldirildi` ile gelir, kayıtlar bozulmamalı.
 
 Çözüm kayıtları bilgi tabanına **yazılmaz**; uygulama verisidir. Bilgi tabanına geri dönüş yolu: Burak onaylar, ben (sohbet) `field_report`/vaka sonucu olarak knowledge/ içine işlerim.
 

@@ -29,18 +29,18 @@ Importer bu dosyayı atlar (`type: log`).
 
 Netelsan şube kart şeması için ayrı bir sorgu yapılmadı; Netelsan teknik belgelerinde yalnız montaj bağlantı şemaları göründü. Kart şeması "bulunamadı" değil, **aranmadı**: Tier-1 turu 2'de aranacak. H.M.SMA.00005 şeması önceki oturumdan; URL elde olmadığı için kaynak kaydı yok.
 
-Henüz taranmayan: PL, RU, DE, IT sorguları; Netelsan H.M.SMA.00005 yeniden açılması; Netelsan şube kart şeması (aranmadı).
+Bu satır Oturum 2'de kısmen değişti: PL/RU/DE birer sorguyla soruldu (aşağıya bak), kart şeması yetersiz arandı. Henüz taranmayan: IT, FR; Netelsan H.M.SMA.00005 belgesinin kendisi; kart şeması (yetersiz arandı).
 
 ## Oturum 2 (2026-11-07) — Tier-1 kapanış + çok dilli tarama
 
 | Sorgu amacı | Dil | Sonuç |
 |---|---|---|
-| Netelsan şube kart şeması (3 sorgu) | tr | **Bulunamadı.** Yalnız montaj bağlantı şemaları (diafon1-4, nextel5), kod çözücü, garanti belgesi çıktı. Durma kuralı (3 sorguda yeni bilgi yok) uygulandı |
-| H.M.SMA.00005 | tr | **Bulunamadı** (netelsan.com.tr/sema/diafon listesinde diafon santral şemaları var, SMA.00005 görünmüyor) |
-| Daire içi bas-konuş devre şeması/tamir | tr | Bulunamadı; Kontrol Kalemi 2021 konusu zaten kayıtlı |
-| Çapraz çalma, PL | pl | Eşleşen vaka yok (elektroda #3796225 gibi sonuçlar kod/hat karışması, kök neden yok); SEO yazıları kullanılmadı |
-| Çapraz çalma, RU | ru | Koordinat/dijital sistem adresleme vakaları (Vizit/Cyfral); paralel hatlı analog çağrı teli ile eşleşmiyor. Bağlantı kaydı alınmadı |
-| Çapraz çalma, DE | de | 3 kullanılabilir kayıt + Siedle servis el kitabı (src-siedle-*, src-elektrikforum-*, src-mikrocontroller-*, src-elektrikforen-*) |
+| Netelsan şube kart şeması (1 sorgu, **tahmini** parça numarasıyla) | tr | Sonuç yok: yalnız montaj bağlantı şemaları (diafon1-4, nextel5), kod çözücü, garanti belgesi çıktı. **Kart şeması yeterince aranmadı** (tahmini numara geçerli kanıt değil); açık kalem |
+| H.M.SMA.00005 (1 sorgu) | tr | Bulunamadı: netelsan.com.tr/sema/diafon listesinde santral şemaları var, SMA.00005 görünmüyor |
+| Daire içi bas-konuş devre şeması/tamir (1 sorgu) | tr | Yeni kaynak yok; Kontrol Kalemi 2021 konusu zaten kayıtlı |
+| Çapraz çalma, PL (1 sorgu, sınırlı) | pl | 1 ilgili forum konusu: Elektroda #3796225, tek yönlü çapraz çalma, çözüm arama özetinde yok → `src-elektroda-domofon-7-16-2021`. SEO yazıları kullanılmadı; diğer Elektroda konuları açılıp incelenmedi |
+| Çapraz çalma, RU (1 sorgu, sınırlı) | ru | Koordinat/dijital sistem adresleme vakaları (Vizit/Cyfral); paralel hatlı analog çağrı teli ile eşleşmiyor. Kaynak kaydı alınmadı |
+| Çapraz çalma, DE (1 sorgu) | de | 3 forum kaydı + Siedle servis el kitabı (src-siedle-*, src-elektrikforum-*, src-mikrocontroller-*, src-elektrikforen-*; sonuncusunun içeriği doğrulanamadı) |
 | 4+N Fermax/Golmar | en/es | Üretici belgeleri: src-golmar-4n-kurulum, src-fermax-citymax-4n-semalar |
 | 2 telli BUS | en/de | Bticino, Fermax BUS2, Hager Elcom bulundu; **Tier-2 işi, henüz kaynak kaydı açılmadı** |
 
@@ -55,4 +55,4 @@ Sorgu metinleri:
 - `two-wire BUS door entry system principle address coding cabling limits troubleshooting manufacturer technical manual audio`
 
 Not: "H.E.PCB.01032" sorgudaki parça numarası tahminidir, kaynaktan alınmadı; sonuç vermedi.
-Henüz taranmayan: IT, FR.
+Henüz taranmayan: IT, FR; PL/RU/DE yalnız birer sorguyla soruldu (sınırlı kapsam).

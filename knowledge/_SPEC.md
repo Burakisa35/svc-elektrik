@@ -75,7 +75,7 @@ note: Neden güvenilir / sınırı ne
 
 ## fault_family (v0.2 eki)
 
-Belirti sınıfı dosyası: `knowledge/fault-families/*.md`, `type: fault_family`. Front matter: `id` (ff-…), `brands`, `confidence`, `status`. Gövde: aile tablosu (kod F1…, belirti, kayıtlı olduğu yerler, marka kaydı, açık vaka) ve soru parametreleri tablosu (kod Q-…, soru, cevap türü, ne ayırır, etiket). Vakasız ailede neden yazılmaz. Aile ve soru kodları **kalıcı kimliktir**: yeniden numaralanmaz, silinmez (kullanımdan kaldırılırsa `status: kaldirildi`).
+Belirti sınıfı dosyası: `knowledge/fault-families/*.md`, `type: fault_family`. Front matter: `id` (ff-…), `brands`, `confidence`, `status`. Gövde: aile tablosu (kod F1…, belirti, kayıtlı olduğu yerler, marka kaydı, açık vaka) ve soru parametreleri tablosu (kod Q-…, soru, cevap türü, ne ayırır, etiket). Vakasız ailede neden yazılmaz. Aile, soru, hipotez (H…) ve test adımı (`step_id`) kodları **kalıcı kimliktir**: yeniden numaralanmaz, silinmez; yeni olan yeni kimlik alır (örn. araya giren adım `7b`), kullanımdan kalkan `status: kaldirildi` olur. `fc-zil-capraz-calma-001` için kimlikler 2026-11-07 itibarıyla donmuştur (öncesi taslaktı, G1 sırasında yeniden numaralandı).
 
 ## Çözüm kaydı sözlüğü (v0.2 eki)
 
@@ -87,7 +87,7 @@ Belirti sınıfı dosyası: `knowledge/fault-families/*.md`, `type: fault_family
 - `step_id`: vaka dosyasındaki test adımı (1, 2, … 7b)
 - `outcome`: cozuldu / kismen / cozulmedi / bekliyor
 - `root_cause_class`: `kisa_devre_iletkenler_arasi` / `yari_iletken_yolu` / `baglanti_hatasi` / `ek_yeri` / `komponent_arizasi` / `besleme` / `diger` / `bilinmiyor` (liste açık uçludur, ekleme bu dosyada yapılır)
-- `field_verified`: bool — çözümün sahada (dönüş testi) doğrulandığı
+- `field_verification`: `dogrulandi` / `dogrulanmadi` — çözümün sahada (dönüş testi) doğrulanıp doğrulanmadığı
 - Zaman damgaları: vaka açılışı, her adımın bitişi, çözüm anı, **tekrar kontrol tarihi** (arıza geri geldi mi). Saat dilimi Europe/Istanbul; saat:dakika düzeyi yeterli.
 
-Kural: `outcome = cozuldu` yalnız `field_verified = true` ile ya da "doğrulanmadı" işaretiyle saklanır; ikincisi analizde ayrı sayılır. Saha sonucu araştırma çıkarımının üstündedir (kök CLAUDE.md).
+Kural: `outcome = cozuldu` her iki `field_verification` değeriyle saklanabilir; analizde `dogrulanmadi` olanlar ayrı sayılır ve çözüm oranına katılmaz. Saha sonucu araştırma çıkarımının üstündedir (kök CLAUDE.md).
