@@ -14,14 +14,14 @@ Santral + DT8 ile şubeler + zil paneli. Netelsan'ın kendi çizimlerinden **oku
 Geri kalan her şey (hangi renk hangi uç, zil teli topolojisi, 7/8 kontağı, fotosel beslemesi) **Simge ve Audio kılavuzlarından analojiyle** gelir. Aynı 1-8 + ZİL şube yapısı ortak, fakat Netelsan çizimindeki bağlantılar metin çıkarımında okunamadı. Bu yüzden aşağıda Netelsan'a ait iddiaların üst sınırı **Orta (analoji)**dır. (Orta)
 
 ## Santral klemens adları
-DZL1 (Dış Zil1), DZL2 (Dış Zil2), KPC HP, KPC ŞASİ, KAPI HP, KAPI HP2, KAPI ŞASİ (Yüksek: adlar, Netelsan çizimi). "İç Zil" adı saha fotoğrafında (Burak) var, PDF metninde çıkmadı. DZL2'nin ikinci kapı zil paneli ortağı olduğu çıkarımdır (Doğrulanmadı). Çizimde ayrıca +15V, −15V, SANTRAL, SİGORTA, KİLİT terminalleri görünüyor; 1/6 güç hattıyla ilişkileri **Doğrulanmadı** (açık soru 5).
+DZL1 (Dış Zil1), DZL2 (Dış Zil2), KPC HP, KPC ŞASİ, KAPI HP, KAPI HP2, KAPI ŞASİ (Yüksek: adlar, Netelsan çizimi). "İç Zil" adı PDF metninde çıkmadı; saha fotoğrafında görülmüştü, dosyalanmadı (Doğrulanmadı). DZL2'nin ikinci kapı zil paneli ortağı olduğu çıkarımdır (Doğrulanmadı). Çizimde ayrıca +15V, −15V, SANTRAL, SİGORTA, KİLİT terminalleri görünüyor; 1/6 güç hattıyla ilişkileri **Doğrulanmadı** (açık soru 5).
 
 ## Uçlar (santral ↔ daire şubesi, DT8)
-Renk–uç eşlemesi: saha (Burak'ın santral/şube fotoğrafları, önceki oturum) + Simge/Audio analojisi; Netelsan PDF'inden okunamadı. Tüm satırlar "Orta" üst sınırlıdır.
+Renk–uç eşlemesi: Simge/Audio analojisi. Burak'ın santral/şube fotoğraflarında renk etiketleri görülmüştü (önceki oturum) ama bu fotoğraflar henüz `field_report` olarak dosyalanmadı, bu yüzden kanıt sayılmıyor (Doğrulanmadı). Netelsan PDF'inden okunamadı. Tüm satırlar "Orta" üst sınırlıdır.
 
 | uç | renk | işlev | sinyal | akım yolu | arıza davranışı | güven | kaynak |
 |---|---|---|---|---|---|---|---|
-| 1 | Kırmızı | Güç hattı; zil paneli fotosel/aydınlatmaya da gider | DC; kutup **Doğrulanmadı** (forumlarda çelişki) | Santral → şubeler paralel → panel 12V/1 | Audio/Simge: sistem kapalı/koruma; santralde kırmızı LED sönerse tesisatta sorun (Simge) | Orta (analoji); kutup Doğrulanmadı | src-simge-daire-subesi-2020 |
+| 1 | Kırmızı | Güç hattı; zil paneli fotosel/aydınlatmaya da gider | DC; kutup **Doğrulanmadı** (forumlarda çelişki) | Santral → şubeler paralel → panel 12V/1 | Simge: santral kırmızı LED sönerse tesisatta sorun (genel ifade, uca özgü değil) | Orta (analoji); kutup Doğrulanmadı | src-simge-daire-subesi-2020 |
 | 2 | Mavi | Ses/konuşma yolu; tam rol Doğrulanmadı | Doğrulanmadı | Santral ↔ şube | Audio kılavuzu "konuşmada dış kapıda uğultu varsa 2 numaralıyı kontrol et" der; forum tersini söyler (çelişki) | Orta (analoji); tamamlanmadı | src-audio-as202-kilavuz, src-kontrolkalemi-audio-ariza-notlari |
 | 3 | Beyaz | Doğrulanmadı | Doğrulanmadı | Doğrulanmadı | Audio forum: kopukken "tık-tık", yeşil LED sürekli (tek kaynak) | tamamlanmadı | src-kontrolkalemi-audio-ariza-notlari |
 | 4 | Yeşil | Kapıcı hattı; kapıcısızda bağlanmaz | — | — | — | Orta (analoji: Simge/Audio kapıcısızda kullanılmaz) | src-simge-kapicili-2016, src-audio-as202-kilavuz |
@@ -39,7 +39,7 @@ Renk–uç eşlemesi: saha (Burak'ın santral/şube fotoğrafları, önceki otur
 - Zillere harici zil trafosundan gerilim verilmemeli (Audio). (Orta, analoji)
 - Santral kartlarından biri çıkarılır/oturmazsa sistem arızaya geçer. (Yüksek, Netelsan)
 - Trafo: 12 daireye kadar 15 V×15 W, üstü 24 V×50 W. Netelsan notu; hangi devreye ait olduğu ve kapıcısız modele uygulanışı çizimden teyit edilmeli. (Orta)
-- İki farklı seste çalan dış/iç zil Audio'nun işlev listesinde var; Netelsan "çift zilli" adı bunu çağrıştırır. (Orta, analoji)
+- "Çift zilli" adı dış (panel) ve iç (daire kapısı) zil ayrımını belirtir; iki farklı seste çalındığı Netelsan için Doğrulanmadı.
 
 ## Bilinen arızalar
 - [fc-zil-capraz-calma-001](../fault-cases/fc-zil-capraz-calma-001.md)

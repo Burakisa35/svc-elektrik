@@ -24,8 +24,9 @@ Importer bu dosyayı atlar (`type: log`).
 - `Simge diafon sesli santral daire şube bağlantı şeması zil kablosu`
 - `intercom pressing one apartment button rings other apartments bell wires crosstalk fault cause`
 - `diafon bir daireye basınca diğer daireler çalıyor zil çapraz çalma arıza sebebi`
+- `Commax 8 phone porter rings in 2 departments` (YoReparo, es sayfası; sorgu metni özet olarak kaydedildi)
 - Araç rehberleri: `Claude Code memory CLAUDE.md best practices ...`, `Supabase row level security best practices migrations ...`, `Vercel environment variables preview production ...`
 
 Netelsan şube kart şeması için ayrı bir sorgu yapılmadı; Netelsan teknik belgelerinde yalnız montaj bağlantı şemaları göründü. Kart şeması "bulunamadı" değil, **aranmadı**: Tier-1 turu 2'de aranacak. H.M.SMA.00005 şeması önceki oturumdan; URL elde olmadığı için kaynak kaydı yok.
 
-Henüz taranmayan: PL, RU, DE, IT sorguları; Netelsan H.M.SMA.00005 yeniden açılması; Netelsan şube kart şeması (bulunamadı).
+Henüz taranmayan: PL, RU, DE, IT sorguları; Netelsan H.M.SMA.00005 yeniden açılması; Netelsan şube kart şeması (aranmadı).
