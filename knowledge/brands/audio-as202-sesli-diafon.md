@@ -29,7 +29,7 @@ Netelsan ile aynı yapı. Elektriksel prensip karşılaştırması için referan
 | 4 | Yeşil | Kapıcı; kapıcısızda bağlanmaz | — | — | — | Yüksek | src-audio-as202-kilavuz |
 | 5 | Sarı | Doğrulanmadı | Doğrulanmadı | Doğrulanmadı | Forum: kopukken yeşil LED kısa, ~15 sn bekleme | tamamlanmadı | src-kontrolkalemi-audio-ariza-notlari |
 | 6 | Pembe | Güç | DC; kutup Doğrulanmadı | Santral → şubeler → panel | Forum: kopukken kırmızı LED sönük | Orta | src-kontrolkalemi-audio-ariza-notlari |
-| 7 Gri / 8 Siyah | | Kapı otomatiği kuru kontağı: gri → harici trafo, siyah → kilit | Harici zil trafosu (kılavuz); AC olduğu Simge'de yazılı | Şube kontağı → trafo → kilit | Kılavuz: kuru kontak olduğundan diafon arızalansa da kapı otomatiği çalışır (kılavuz metninden okundu, ayrıca doğrulanmadı) | Yüksek (bağlantı); sinyal Orta | src-audio-as202-kilavuz |
+| 7 Gri / 8 Siyah | | Kapı otomatiği kuru kontağı: gri → harici trafo, siyah → kilit | Harici zil trafosu (kılavuz); AC olduğu Simge'de yazılı | Şube kontağı → trafo → kilit | Kuru kontak olduğundan diafon arızalansa da kapı otomatiği çalışır: kılavuz arama özetinde görüldü, tam metin okumasında teyit edilemedi (Orta) | Yüksek (bağlantı); sinyal Orta | src-audio-as202-kilavuz |
 | ZİL (şube klemens 10) | | Panel zil teli ile iç zil butonu teli **birleştirilip** 10'a | Doğrulanmadı | Ortak → buton → daire teli → şube (bağlantı kılavuzdan) | Tek şubede çalmıyorsa o dairenin zil teli/şubesi | Yüksek (bağlantı); sinyal tamamlanmadı | src-audio-as202-kilavuz |
 
 Çelişki: forumlarda polarite bir yerde "1 +, 6 −", başka yerde tersi yazılı; kılavuz polarite vermiyor.
