@@ -221,8 +221,8 @@ yapılır; hareketlerde `UNIQUE(idempotency_key)`.
    tarafından doğrulanır. `DOĞRULANMADI`
 
 **Diğer kararlar:** apartman işinde borçlu başına bir satış belgesi açılır, proje toplamı
-belge değil teklif bilgisidir; böylece gelir iki kez yazılmaz. Paylaşım linkinin kapsamı ileride
-iş düzeyinden **belge** düzeyine inebilir; bir daire sakini yalnız kendi ödemesini görür.
+belge değil teklif bilgisidir; böylece gelir iki kez yazılmaz. Paylaşım **tek ortak link**tir (Burak
+kararı, 2026-11-06): daire bazlı link yok. Daire bazlı pay, ödeme ve borç yalnız sahip panelinde görünür.
 Maliyet bilgisi girilmemiş bir işin katkısı "kesin" değil **eksik verili tahmin** olarak
 gösterilir. Finans hedefleri (`svc_finans_hedefleri`, V2), `svc_gorevler` hedeflerinden
 ayrıdır: gerçekleşen değeri elle girilmez, hareketlerden hesaplanır.

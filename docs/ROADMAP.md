@@ -19,7 +19,7 @@
 | Planda | Uygulanmış hâl | Karar |
 |---|---|---|
 | `svc_isler` müşteri adı, telefon ve adresi kendi içinde tutar | `svc_isler` → `svc_musteriler` + `svc_adresler` (adres geçmişi, telefonla tekil) | **Uygulanmış hâl kalır.** Telefonu iş kaydının içine gömmek, aynı müşterinin ikinci işinde veriyi çoğaltırdı. Ekranda tek form: sunucu telefonla müşteriyi bulur ya da açar (`svc_s_is_olustur`) |
-| `svc_linkler` | `svc_paylasimlar`: token özeti, `alanlar` izin listesi, etiket, `son_gecerlilik`, `iptal_at`, `erisim_sayisi`, `son_erisim_at` | **Ad korunur.** Eksikler (`tur` ortak/daire, `ilk_erisim_at`) Modül 3'te eklenecek; mevcut satırlar `tur='ortak'` varsayılanıyla bozulmadan kalır |
+| `svc_linkler` | `svc_paylasimlar`: token özeti, `alanlar` izin listesi, etiket, `son_gecerlilik`, `iptal_at`, `erisim_sayisi`, `son_erisim_at` | **Ad korunur.** `tur` sütunu **eklenmez** (apartman kararı: tek ortak link, §5). `etiket` zaten opsiyonel ("A Blok girişi" gibi, yalnız sahip için). `ilk_erisim_at` Modül 3'te eklenir |
 | Token 128 bit | 2 × UUIDv4 = 244 rastgele bit, 64 hex; DB'de yalnız SHA-256 özeti | Gereksinimin üstünde, değişmez (Yüksek) |
 | Müşteri sayfası tek allow-list fonksiyonu çağırır | `svc_paylasim_oku()`: sahibin seçtiği alanları döndürür, alanlar bir kısıtla izin listesine bağlı | Plana uygun. Modül 1 ekranı varsayılan olarak yalnız **`asama` + `musteri_aciklamasi`**'ı seçer ("durum + benim notum") |
 | `svc_olaylar` Modül 3'te; durum olaylardan türetilir | `svc_olaylar` **zaten var** (0001): silinemez, durum ve aşama geçişlerini tetikleyici yazıyor | **Türetme yok.** Bkz. §3 |
@@ -59,6 +59,18 @@ sayfası · vitrin (telefon/WhatsApp). **1b:** talep formu ve talepleri değerle
 3. Yanlış parolada sayaç artar, 6. denemede kilit devreye girer.
 4. Anon key ile tablolara doğrudan istek 401 döner (0001'de ölçüldü, deploy sonrası tekrarlanır).
 5. Çıkıştan sonra eski oturum çerezi elle geri yüklense bile 401 döner.
+6. **"İş aç" sahada ≤30 saniyede biter.** Zorunlu alan **bir tane**: telefon *veya* ad. Yanında bir
+   kısa not kutusu var, geri kalan her şey opsiyonel. Not kutusu büyük, `font-size ≥16px`, iPhone
+   klavye diktesine uygun (ayrı ses geliştirmesi yok).
+
+**Kabul 6 için şema değişikliği — Modül 1 şemasını ETKİLER (Modül 1 içinde küçük bir migration):**
+uygulanmış şemada `svc_musteriler.ad`, `soyad` ve `telefon` zorunlu; `svc_isler.baslik` ve
+`hizmet_turu` da zorunlu. Bu hâliyle tek alanla iş açılamaz.
+- `svc_musteriler`: `ad`, `soyad`, `telefon` opsiyonel olur, yerine `check (telefon is not null or ad is not null)`
+  gelir. Telefon tekilliği korunur (NULL'lar çakışmaz).
+- `svc_isler`: kısıtlar değişmez. `svc_s_is_olustur` boş başlığı notun ilk satırından (≤60 karakter)
+  üretir, boş hizmet türünü `diger` yapar.
+- Herkese açık talep formu (`svc_talepler`) **değişmez**; orada ad, soyad ve telefon zorunlu kalır.
 
 ## 3. Modül 3'e hazırlık: olaylar ve durum — `DÜZELTME`
 Plan, Modül 3'te `svc_isler.durum`'un olaylardan türetilen bir önbelleğe dönmesini istiyordu.
@@ -92,14 +104,19 @@ bağlantısı kurulacak. Var olan satırlar ve tetikleyiciler değişmez; Modül
   **Onayı sahip kaydeder:** kanal (telefon · yüz yüze · mesaj) ve zamanı yazılır. Olay kaydı yalnız
   "ek iş eklendi" ve "onaylandı" bilgisini teklif kimliğiyle tutar. Tutar tek yerde durur; Modül 4
   onu iki kez saymaz.
-- Linkte ek iş görünür (kalem ve tutar, sahip seçerse). Bu, izin listesine `ek_isler` alanı eklenerek
-  yapılır.
+- Linkte ek iş görünür, yalnız **bina geneli kalem + tutar** olarak (sahip seçerse). Bu, izin listesine
+  `ek_isler` alanı eklenerek yapılır. Daire bazlı pay ve tahsilat yalnız sahip panelinde görünür (Modül 4).
 - **Fotoğraf — RİSK:** service_role olmadan Supabase Storage'a imzalı URL üretilemez (Doğrulanmadı;
   Storage politikaları anon'a açılırsa kapı anahtarı mantığı Storage'a uzanamaz). Seçenekler: Vercel
   Blob, ya da yalnız Storage için daraltılmış bir anahtar. **Modül 3 başında karar gerekir.**
-- Apartman: varsayım **tek ortak link** (iş durumu, genel not, ilerleme; daireye özel bilgi yok).
-  Daire başına link gerekirse `svc_paylasimlar.tur='daire'` + etiket eklenir. Mevcut model iki seçeneği
-  de taşıyor.
+- **Apartman — `KARAR` (Burak, 2026-11-06): bütün sakinlere TEK ORTAK LİNK.** Daire başına link
+  seçeneği tasarımdan çıkarıldı. Ortak sayfada yalnız iş durumu, genel ilerleme ve sahibin genel notu
+  görünür. Daire no, kişi adı, telefon, daire bazlı tutar, ödeme ya da borç **asla** görünmez. İzin
+  listesinde bunlara karşılık gelen bir alan zaten yok; yani kural yapısal olarak sağlanıyor.
+- **Açılış sayaçlarının kanıt değeri zayıf:** `erisim_sayisi`, `son_erisim_at` (ve Modül 3'te
+  `ilk_erisim_at`) kişiyi değil **linki** sayar. Linki kimin açtığı bilinmez; ortak linkte herhangi
+  bir sakin açmış olabilir. Bu sayaçlar "müşteri bilgilendirildi" kanıtı olarak **kullanılmaz**, yalnız
+  "link en az bir kez açıldı" anlamına gelir.
 
 ## 6. Modül 4 — Finans
 `VERI_MODELI.md` §4.3'teki beş tablo ve üç düzeltme esas. Plandaki "iş tutarı" bir `svc_isler`
@@ -115,3 +132,19 @@ hesaplanır. Hatırlatma **taslak** metindir; sahip kopyalayıp kendisi gönderi
 - Süre ve fiyat referansı ziyaret olaylarına (Modül 3) ve satış belgelerine (Modül 4) dayanır.
   Gün planı kümeleme adres verisine (`svc_adresler.ilce/mahalle`) dayanır; koordinat yok, kümeleme
   ilçe ve mahalle düzeyinde olur.
+
+## 8. TEHAİ'den alınacaklar
+TEHAİ deposu **salt okunur** tarandı (2026-11-06); dosya kopyalanmadı. Her satır, okunan dosyaya
+dayanıyor. Logo, "T" işareti ve TEHAİ/TEHAŞ/Arel adları alınmaz.
+
+| # | Aday | Karar | Gerekçe (koddan) | Modül | M1 şeması |
+|---|---|---|---|---|---|
+| 1 | "teklif_ozet" görünümü | **AL (kalıp), zaten uygulandı** | Bu adda bir görünüm **yok**. `teklifOzet` adlı bir JS fonksiyonu var (`assets/js/tehai-teklif-hesap.js`) ama o bir hesap fonksiyonu. Kişisel veriyi dışlayan izin listesi kalıbı ise `query_service_request` (001): seçilmiş alanları `json_build_object` ile döndürüyor, telefon/adres yok. BEE'de karşılığı `svc_paylasim_oku()`. Fark: TEHAİ bu fonksiyonda ilçe ve mahalleyi de döndürüyor, BEE döndürmez | 1 | Hayır |
+| 2 | `is_kayitlari` zengin alanları | **UYARLA** | Alanlar 024'te var. **Alınmayacak kusur:** varsayılanlar veri uyduruyor: `ilk_ziyarette_cozuldu default true`, `odeme_durumu default 'odendi'`, `durum default 'tamamlandi'`. Girilmemiş bilgi "çözüldü/ödendi" görünüyor; bu, "eksik veri sıfır/doğru gösterilmez" kuralını çiğner. BEE'de hepsi NULL olur. Eşleme: `mahalle` → `svc_adresler`'de zaten var · `bina_tipi`, `sistem_tipi`, `ilk_belirti`, `teshis`, `mudahale`, `talep_kanali` → Modül 3 kapanış formunda `svc_isler`'e **tipli, NULL olabilen sütun** · `olcum_degerleri` → `svc_olcumler` · `kullanilan_malzeme` → `svc_is_malzemeleri` · `calisma_suresi` ve `tekrar_ziyaret` **elle girilmez**, ziyaret olaylarından hesaplanır | 3 | **Hayır.** Modül 1'de yer açmaya gerek yok: Postgres'te NULL olabilen sütun eklemek anlık ve bozucu değil. Tek bir `jsonb` sütun **seçilmedi**, çünkü Modül 5 bu alanlarla gruplama yapacak ve listeden seçim kısıtı (CHECK) isteyecek; `jsonb` ikisine de izin vermez |
+| 3 | `musteri_risk` | **UYARLA (tablo değil, hesap)** | 006'da tablo olarak var: sayaçlar artı 0–10 `risk_skoru`, bir RPC ile (`hesapla_musteri_risk`) güncelleniyor. Saklanan sayaç kaynağından kayabilir, puan da uydurmadır. BEE'de puan yok; müşteri başına "vadesi geçmiş ödeme sayısı / toplam satış belgesi" **sorguyla hesaplanır** (vade ve eşleştirmeden) | 4 | Hayır |
+| 4 | Ekipman kaydı | **UYARLA** | 024 `ekipmanlar`: tip, marka, model, seri no, konum notu, garanti bitişi; işe ve müşteriye bağlı. **Fotoğraf sütunu yok**, fotoğraf TEHAİ'de ayrı bir kanıt akışında. BEE'de müşteride kurulu cihaz (`svc_kurulu_cihazlar`, adrese bağlı) ile Burak'ın kendi ölçüm aletleri (`svc_ekipmanlar`, VERI_MODELI §4.1) **ayrı** tutulur; TEHAİ ikisini ayırmıyor. Fotoğraf, §5'teki depolama kararına bağlı | 3 | Hayır |
+| 5 | Çevrimdışı: SW + manifest + yerel kuyruk | **AL (kalıp) + bir düzeltme** | `sw.js`: `/api/` istekleri önbelleğe hiç alınmıyor, sayfalarda önce ağ, statik dosyalarda önce önbellek stratejisi var. Doğru, aynen alınır. `pages/is-kaydi.html`: IndexedDB kuyruğu (`local_id` anahtarlı) `online` olayında senkronlanıyor, Background Sync kullanılmıyor. **Kusur:** `local_id` sunucuya gitmiyor ve sunucuda tekillik yok (grep: `api/` ve migration'larda yok). Zaman aşımından sonra yeniden deneme aynı kaydı iki kez yazabilir. BEE'de `istemci_id UNIQUE` (bkz. §4). iOS Safari'nin Background Sync desteği **doğrulanmadı** | 2 | Hayır |
+| 6 | Tasarım token'ları | **AL (marka dışı olanlar)** | TEHAİ `tokens.css`: yarıçap, `--ease`, `--dur-*`, `prefers-reduced-motion` bloğu. `base.css`: 44px dokunma hedefi. BEE `styles/tokens.css`'te yarıçap, ease ve 44px zaten var; **reduced-motion bloğu eksik**, eklenecek. Renkler alınmaz (TEHAİ mavi, BEE gümüş/grafit) | 1 | Hayır |
+| 7 | Teklif üretimi | **SONRA (Modül 4'ten sonra ayrı hedef)** | 042 "teklif motoru" (`teklif_ihaleler`, `teklif_ihale_kalemleri`, şartname okuma, PDF) bir **kamu ihale** modülü, kesin alınmayacaklar listesinde. Kamera teklifi `api/pricing.js` (`fn=kamera`) ve `tehai-teklif-hesap.js` içinde. **Şimdi alınacak tek şey:** 040'taki teklif **sonuç kaydı** (`karar_ts`, `ret_sebebi` sözlüğü, `kabul_bedel`) `svc_teklifler` tasarımına eklenir. 040'ın kendi tespiti: reddedilen teklif kaydedilemediği için "öğrenecek veri" hiç oluşmuyordu. Bir de ilke: `teklifOzet` fiyatı eksik kalem varsa genel toplamı `null` döndürüyor, sıfır değil. **Çakışma yok:** Modül 1–4 şemasında teklif tablosu henüz yok | 3–4 (yalnız tasarım) | Hayır |
+| 8 | `customer_pins` | **ALMA** | 017 + `api/customer-auth.js`: telefon + şifreyle **müşteri portal hesabı** (PBKDF2 100k, kilit). BEE'de müşteri hesabı yok. Link için ek koruma olarak da gerekmiyor: token 244 bit, tahmin edilemez. Ortak apartman linkinde bir PIN de linkle birlikte paylaşılacağı için bir şey korumaz, yalnız okuyucuya sürtünme ekler. Kilit fikri zaten `svc_giris`'te var | — | Hayır |
+| 9 | Push bildirimleri | **ALMA (şimdilik)** | `api/_webpush.js` bağımlılıksız (Node crypto, 114 satır), `sw.js`'de push dinleyicisi var. İleride yalnız sahibe (alacak hatırlatması) gerekirse referans olur. iOS'ta ana ekrana eklenmiş PWA ister (TEHAİ AGENTS.md K2) | — | Hayır |
