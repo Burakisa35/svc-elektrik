@@ -8,6 +8,8 @@ drop function if exists public.svc_s_giris(text, text);
 drop function if exists public.svc_kurulum(text, boolean);
 
 alter table public.svc_giris add column if not exists iterasyon int not null default 600000 check (iterasyon >= 600000);
+-- Çıkış = sürüm +1 → o ana kadar verilmiş TÜM oturum token'ları geçersiz (JWT tek başına geri alınamaz).
+alter table public.svc_giris add column if not exists oturum_surumu int not null default 1;
 comment on column public.svc_giris.password_hash is 'PBKDF2-SHA256 (hex). salt = satır-başı rastgele (hex). Doğrulama sunucuda, timingSafeEqual.';
 
 -- Kurulum: yalnız sunucu sırlarını üretir (SQL Editor / postgres). Parolayı sahip ilk girişte belirler.
@@ -63,13 +65,35 @@ begin
                             'hash', g.password_hash, 'salt', g.salt, 'iterasyon', g.iterasyon);
 end $$;
 
-create function public.svc_s_giris_basarili(p_sahip text) returns void
+create function public.svc_s_giris_basarili(p_sahip text) returns int
+language plpgsql security definer set search_path = public, pg_temp as $$
+declare v int;
+begin
+  perform svc_sahip_dogrula(p_sahip);
+  update svc_giris set hata_sayisi = 0, kilit_sayisi = 0, kilit_bitis = null, updated_at = now()
+   where id = 1 returning oturum_surumu into v;
+  return v;
+end $$;
+
+-- Her sahip isteğinde: token'daki sürüm hâlâ geçerli mi?
+create function public.svc_s_oturum_surumu(p_sahip text) returns int
+language plpgsql security definer set search_path = public, pg_temp as $$
+declare v int;
+begin
+  perform svc_sahip_dogrula(p_sahip);
+  select oturum_surumu into v from svc_giris where id = 1;
+  return v;
+end $$;
+
+create function public.svc_s_cikis(p_sahip text) returns void
 language plpgsql security definer set search_path = public, pg_temp as $$
 begin
   perform svc_sahip_dogrula(p_sahip);
-  update svc_giris set hata_sayisi = 0, kilit_sayisi = 0, kilit_bitis = null, updated_at = now() where id = 1;
+  update svc_giris set oturum_surumu = oturum_surumu + 1, updated_at = now() where id = 1;
 end $$;
 
 grant execute on function public.svc_s_sifre_kur(text, text, text, int) to anon;
 grant execute on function public.svc_s_giris_baslat(text)              to anon;
 grant execute on function public.svc_s_giris_basarili(text)            to anon;
+grant execute on function public.svc_s_oturum_surumu(text)             to anon;
+grant execute on function public.svc_s_cikis(text)                     to anon;
