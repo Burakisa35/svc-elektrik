@@ -20,8 +20,10 @@
 ## Tuzaklar
 - `apply_migration`, DROP içeren SQL'de onay ister. Onay gelmezse 230 sn sonra zaman aşımına uğrar; aynı turda tekrar denenmez.
 - SQL Editor'den elle uygulanan migration `schema_migrations`'a kaydedilmez. Kanıt olarak eserler (sütun, fonksiyon) ölçülür.
-- Test geri alınsa da sıra numaraları geri alınmaz: testten sonra ilk gerçek kayıt `T26-0001` olmaz.
-- Free plan: yedekleme ve zamana geri dönüş yok; Supabase dokümanına dayanıyor, hesapta doğrulanmadı.
+- Sıra numaraları (`nextval`) transaction geri alınsa da ilerler. `db-erisim.sql` başta sayaçları kaydeder, sonda `setval` ile geri yükler (setval kalıcıdır). Yeni test bu kalıbı izlemeli; yoksa ilk gerçek iş `BEE-26-0001` olmaz.
+- Free plan (Supabase dokümanı, Yüksek): indirilebilir yedek yok, zamana geri dönüş (PITR) yok; dokümanın önerisi düzenli `supabase db dump` ile dış yedek. 7 gün düşük aktivitede proje durdurulur (önce e-posta gelir), 90 gün içinde geri açılabilir.
+- Supabase Auth kullanılmıyor (0 kullanıcı). Yeni kayıt (signup) ayarı SQL'den okunamıyor: doğrulanmadı. `authenticated` rolünün hiçbir yetkisi olmadığı için açık olsa bile veri açılmaz.
+- Depolama (Storage) kovası, Edge Function, Vault sırrı ve branch yok. Realtime yayınında `svc_` tablosu yok. `pg_graphql` kurulu değil.
 
 ## Komutlar
 ```bash
@@ -29,4 +31,6 @@ md5sum supabase/migrations/*.sql
 ```
 Canlıdaki karşılığı: `select name, md5(array_to_string(statements,'')) from supabase_migrations.schema_migrations order by version;`
 
-Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum: 38/38.
+Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum (2026-11-07): 38/38, sayaçlar yerinde kaldı.
+
+Denetim (her migration'dan sonra): MCP `get_advisors` güvenlik + performans. Beklenen kalıcı bulgular: `rls_enabled_no_policy` (INFO, kasıtlı) ve `anon_security_definer_function_executable` (WARN, kasıtlı; her fonksiyon anahtar ister). Bunların dışında çıkan her bulgu incelenir.

@@ -1,6 +1,6 @@
 -- BEE erişim testleri — sahip · anonim ziyaretçi · paylaşım linki.
 -- Çalıştırma: Supabase SQL Editor ya da MCP execute_sql (proje uwmbtaxxdcjumxbnigpy).
--- Tek DO bloğu; sonunda KASITLI raise ile her şey geri alınır → veritabanında iz kalmaz.
+-- Tek DO bloğu; sonunda KASITLI raise ile her şey geri alınır, sayaçlar da eski değerine döner → iz kalmaz.
 -- Beklenen çıktı: "BEE_TEST_SONUC kalan=0 ..." hata mesajı. kalan>0 ise KALDI satırları okunur.
 do $$
 declare
@@ -12,7 +12,14 @@ declare
   ip3 constant text := repeat('c', 64);
   r jsonb; t_id uuid; t2_id uuid; is_id uuid; kendi_is uuid; pay jsonb; pay2 jsonb; n int; tablo text;
   hata text;
+  -- Sayaçlar transaction geri alınsa da ilerler; test sonunda setval ile eski hâline döner (setval kalıcıdır).
+  olay_seq constant text := pg_get_serial_sequence('public.svc_olaylar', 'id');
+  s_talep bigint; c_talep boolean; s_is bigint; c_is boolean; s_olay bigint; c_olay boolean;
 begin
+  select last_value, is_called into s_talep, c_talep from public.svc_talep_no_seq;
+  select last_value, is_called into s_is, c_is from public.svc_is_no_seq;
+  execute format('select last_value, is_called from %s', olay_seq) into s_olay, c_olay;
+
   -- Hazırlık (postgres): kapı anahtarının özeti.
   insert into svc_ayarlar (anahtar, deger) values ('kapi_hash', encode(sha256(convert_to(kapi, 'UTF8')), 'hex'))
   on conflict (anahtar) do update set deger = excluded.deger;
@@ -269,5 +276,8 @@ begin
     rapor := rapor || E'\nKALDI P7 iptal geri alındı'; kalan := kalan + 1;
   exception when others then rapor := rapor || E'\nGEÇTİ P7 iptal geri alınamaz'; end;
 
+  perform setval('public.svc_talep_no_seq', s_talep, c_talep);
+  perform setval('public.svc_is_no_seq', s_is, c_is);
+  perform setval(olay_seq, s_olay, c_olay);
   raise exception 'BEE_TEST_SONUC kalan=% %', kalan, rapor;
 end $$;

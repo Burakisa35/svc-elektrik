@@ -20,6 +20,11 @@
 - Mobil: ≤520px tek kolon, dokunma hedefi ≥44px, `100dvh`, form `font-size ≥16px`.
 - Vercel kök dizini `src/` olmalı (`api/` ve `vercel.json` burada). Proje ayarında doğrulanmadı.
 
+## Çalışma disiplini (brief 006 §3)
+1. Bir madde ancak kanıt komutunun çıktısı varsa "bitti" yazılır; yoksa **kısmen** ya da **Doğrulanmadı**.
+2. CLAUDE.md'ye yazılan her cümle güven etiketi taşır; ölçülmeyen şey etiketsiz yazılmaz.
+3. Son rapor ≤15 satırdır: sonuç, kanıt, yapılmayanlar, Burak'ın karar vereceği konular. Süreç anlatımı rapora girmez. Teslimler `TESLIMLER.md`'ye işlenir.
+
 ## Tuzaklar
 - `#` sonrası bazı uygulamalarda kaybolabilir; WhatsApp→Safari testi gerçek telefonda yapılır.
 - iOS ana ekran PWA'sının çerez deposu Safari'den ayrıdır (Orta).

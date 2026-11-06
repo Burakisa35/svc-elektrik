@@ -58,7 +58,7 @@ for f in src/api/*.js src/assets/js/*.js; do node --check "$f"; done   # JS söz
 md5sum supabase/migrations/*.sql           # canlıdaki MD5 ile karşılaştırma: supabase/CLAUDE.md
 ```
 DB erişim testi (`supabase/tests/db-erisim.sql`) SQL Editor'den çalıştırılır; ayrıntı `supabase/CLAUDE.md`.
-Koruma: `.claude/settings.json` hook'u, Code'un `knowledge/` ve `docs/` yazmasını Edit/Write **ve** Bash'te engeller. Yolu metinde geçmeyen betikle yazma yakalanmaz.
+Koruma: `.claude/settings.json` hook'u, Code'un `knowledge/` ve `docs/` yazmasını Edit/Write **ve** Bash'te engellemek için yazıldı. Birim testinde engelliyor (Yüksek). Canlı oturumda engellediği **Doğrulanmadı**: 2026-11-07'deki iki oturumda deneme engellenmedi; oturumlar repo kökünde açılmadığı için hook yüklenmemiş olabilir (Orta). Yolu metinde geçmeyen betikle yazma yakalanmaz.
 
 ## Dizin haritası
 
