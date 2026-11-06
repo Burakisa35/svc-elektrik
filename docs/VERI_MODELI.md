@@ -183,20 +183,59 @@ Belgedeki kurallar veri modelinde şöyle karşılanacak:
 koşullar, gözlem, zaman. Adrese bağlanması, aynı tesisatın aylar sonra tekrar ölçülüp
 karşılaştırılmasını sağlar.
 
-### 4.3 Finans
-`svc_finans`: `tur` (gelir · gider), kategori (işçilik · malzeme · yol · genel gider…),
-tutar, `is_id` opsiyonel (bağımsız gelir/gider de olur), opsiyonel `is_malzeme_id`.
-**Talep edilen ve tahsil edilen tutar ayrı satırlardır**; tahsilat ayrı tabloya ya da türe
-ayrılır. İş katkısı = iş gelirleri − iş bazlı malzeme tüketim maliyeti − diğer doğrudan iş
-giderleri. Satın alma bir gider değil, bir **stok girişidir**; maliyet ancak tüketildiğinde
-işe yazılır (belgedeki 2.000 TL / 600 TL örneği).
+### 4.3 Finans — `KARAR` (Burak, 2026-11-06) · şema YOK
+Kaynak: Burak'ın "BEE — Finansal Yönetim ve İş Kârlılığı Mimarisi" belgesi.
 
-**Tekrar ziyaret** (belge §10): ölçülebilmesi için iş başına **ziyaret** kaydı gerekir
-(`svc_ziyaretler`: `is_id`, tarih, sıra, `tekrar_nedeni`: yanlış teşhis · eksik malzeme ·
-yanlış ürün · ekipman yok · beklenmeyen tesisat · müşteri kaynaklı · diğer). 2. aşamada malzeme
-ile birlikte açılır.
+**İlke — üç eksen, her kayıt yalnız birinde:**
 
-### 4.4 Belgenin kör alanları
+| Eksen | Kaydeder | Para hareket eder mi? |
+|---|---|---|
+| Yükümlülük (belge) | Kim kime ne borçlu: iş bedeli, alış, gider | Hayır |
+| Para hareketi | Gerçek hesaba giriş ve çıkış | Evet |
+| Maliyet tahsisi | Hangi maliyet hangi işe yüklendi (malzeme tüketimi) | Hayır |
+
+Alacak, katkı ve nakit **saklanmaz, hesaplanır.**
+
+**V0 şeması (5 tablo):** `svc_finans` (belge başlığı: tür, taraf, opsiyonel `is_id`, işlem
+tarihi ≠ kayıt tarihi, vade, para birimi) · `svc_finans_kalemleri` (miktar ≠ tutar, birim
+fiyat, KDV oranı, KDV dahil mi) · `svc_finans_hesaplari` (nakit, banka, kart; işletme/kişisel) ·
+`svc_para_hareketleri` (tahsilat ve ödeme **tek tabloda**, yönüyle birlikte) ·
+`svc_finans_eslestirmeleri` (hareket ↔ belge, çoka-çok, tutarlı).
+Kurallar: tutarlar `bigint` kuruş; kesinleşmiş kayıt değiştirilemez, düzeltme ters kayıtla
+yapılır; hareketlerde `UNIQUE(idempotency_key)`.
+
+**Burak'ın üç düzeltmesi (kesin):**
+1. **Teklif bağımsız bir varlıktır** (`svc_teklifler`, V1). Talepten hazırlanabilir
+   (`talep_id`), doğrudan oluşturulabilir (iki bağlantı da boş), kabul edilirse bir iş emriyle
+   ilişkilendirilebilir (`is_id`). **Reddedilmesi iş emrini otomatik iptal etmez.** Teklif
+   kalemleri, ileride gerçekleşen maliyetle karşılaştırılabilecek yapıda tutulur. Teklif gelir
+   kaydı oluşturmaz. **Teklif modülü geliştirilmeyecek; bu yalnız veri modeli kararıdır.**
+2. **Bütçe sanal bir tahsistir, hesap değildir.** Ekipman ve kıyafet zarfları
+   (`svc_butceler` + tahsis kayıtları) gerçek hesaplar arasında para hareketi oluşturmaz.
+   Zarflardaki tutarlar toplam nakit bakiyesine **eklenmez**. Nakit hareketi yalnız iki gerçek
+   hesap arasında para aktarıldığında oluşur. *(Önceki "bütçe = alt hesap / transfer" önerisi
+   reddedildi.)*
+3. **Ekipman yatırımı dönem gideri değildir.** Alımda nakit çıkışı oluşur ve cihaz
+   `svc_ekipmanlar` envanterine girer. Bedel otomatik olarak **ne bir işin maliyetine ne de
+   tamamıyla dönem faaliyet giderine** yüklenir. Sınıflandırma ve amortisman kararı muhasebeci
+   tarafından doğrulanır. `DOĞRULANMADI`
+
+**Diğer kararlar:** apartman işinde borçlu başına bir satış belgesi açılır, proje toplamı
+belge değil teklif bilgisidir; böylece gelir iki kez yazılmaz. Paylaşım linkinin kapsamı ileride
+iş düzeyinden **belge** düzeyine inebilir; bir daire sakini yalnız kendi ödemesini görür.
+Maliyet bilgisi girilmemiş bir işin katkısı "kesin" değil **eksik verili tahmin** olarak
+gösterilir. Finans hedefleri (`svc_finans_hedefleri`, V2), `svc_gorevler` hedeflerinden
+ayrıdır: gerçekleşen değeri elle girilmez, hareketlerden hesaplanır.
+
+### 4.4 Ziyaret ve zaman kayıtları — ortak bağımlılık · şema YOK
+Malzemedeki "eksik malzeme yüzünden tekrar gitme" analizi, finanstaki saatlik katkı, tekrar
+ziyaret maliyeti ve ortak ulaşım dağıtımı **aynı kayda** ihtiyaç duyar: iş başına ziyaret
+(`is_id`, tarih, sıra, `tekrar_nedeni`) ve zaman bileşenleri (ön görüşme · hazırlık ·
+ulaşım · teşhis · uygulama · test/teslim · raporlama). Bu kayıt, malzeme ve finans
+migration'larından **önce** kurulur ve ikisi de buna bağlanır. Ortak ulaşım tek bir gider olarak
+saklanır; dağıtım kuralı raporda uygulanır, veriye yazılmaz.
+
+### 4.5 Malzeme belgesinin kör alanları
 Belgenin 13. bölümündeki on soru **veriyle cevaplanacak**, varsayımla kesinleştirilmeyecek.
 İlk ikisi (fiziksel stok hangi hacimde anlamlı · sarf girişi zaman kaybettiriyor mu) V0'ın
 çıkış kriteridir. V0'da `svc_is_malzemeleri` kayıtlarının girilip girilmediği ve ne kadar
