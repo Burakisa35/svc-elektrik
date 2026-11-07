@@ -102,7 +102,7 @@ begin
   exception when insufficient_privilege then rapor := rapor || E'\nGEÇTİ O4 uydurma oturum reddedildi'; end;
 
   begin
-    update svc_oturumlar set bitis = now() - interval '1 minute';
+    update svc_oturumlar set bitis = now() - interval '1 minute' where token_hash = encode(sha256(convert_to(tok, 'UTF8')), 'hex');
     perform set_config('request.headers', json_build_object('x-bee-oturum', tok)::text, true);
     set local role anon;
     perform svc_s_ozet(k_sahip);
@@ -110,7 +110,7 @@ begin
     rapor := rapor || E'\nKALDI O5 süresi dolmuş oturumla geçti'; kalan := kalan + 1;
   exception when insufficient_privilege then rapor := rapor || E'\nGEÇTİ O5 süresi dolan oturum reddedildi'; end;
 
-  update svc_oturumlar set bitis = now() + interval '1 day';
+  update svc_oturumlar set bitis = now() + interval '1 day' where token_hash = encode(sha256(convert_to(tok, 'UTF8')), 'hex');
   begin
     perform set_config('request.headers', json_build_object('x-bee-oturum', tok)::text, true);
     set local role anon;

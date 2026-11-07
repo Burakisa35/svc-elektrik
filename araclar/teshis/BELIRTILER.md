@@ -12,4 +12,5 @@ Bir belirti gördüğümde önce buraya bakarım. Satır, bu projedeki kendi kod
 | Test geri alındı ama ilk kayıt numarası atlıyor | Testten önce/sonra `select sequencename, last_value from pg_sequences` | `nextval` transaction'la geri alınmaz. Test sayaçları kaydedip `setval` ile geri yükler | Yüksek | — |
 | Kendi raporumda bir sayı ("13/13", "N kontrol") | Yazmadan önce say: `grep -c` ya da çıktının son satırı | Sayı ölçülmeden yazılmıştı (gerçek 15) | Yüksek | — |
 | Koruma hook'u canlı oturumda engellemedi | `pwd` ve oturumun açıldığı kök: hook repo kökünde mi yükleniyor? | **ADAY:** oturum `/home/user`'da açılıyor, repo kökünde değil | Orta | — |
+| Migration bölündü/kısmen uygulandı; testler canlıda farklı davranabilir | `SON=<son uygulanan> bash supabase/tests/yerel-kurulum.sh` | Bölme ara durum üretti: 0005'te `svc_talep_olustur` "not unique", eski durum seti | Yüksek | T-001 F5 |
 | Canlı ile dosya farklı mı? | `select name, md5(array_to_string(statements,'')) from supabase_migrations.schema_migrations` ve `md5sum` | — (kontrol adımı) | Yüksek | — |

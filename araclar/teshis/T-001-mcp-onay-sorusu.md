@@ -2,7 +2,7 @@
 Tarih: 2026-11-07 · Durum: AÇIK
 
 ## Belirti
-`apply_migration` 6 kez şu hatayla döndü: "timed out after 230s. The server asked the user a question, and no answer came before the time limit." Eski 0004 için 5 kez (2026-11-06/07), DROP'ları ayrılmış 0005 için 1 kez (2026-11-07). DROP'ları ayrılmış 0004 aynı gün ilk denemede `{"success":true}` döndü.
+`apply_migration` 6 kez şu hatayla döndü: "timed out after 230s. The server asked the user a question, and no answer came before the time limit." Eski 0004 için 5 kez (2026-11-06/07), DROP'ları ayrılmış 0005 için 1 kez (2026-11-07). DROP'ları ayrılmış 0004 aynı gün ilk denemede `{"success":true}` döndü. Gövdedeki DELETE kaldırılan 0005 07:16 UTC'de sorusuz uygulandı (tahmin aracının 7. doğru tahmini).
 
 ## Olası nedenler
 | # | Neden | Durum | Güven | Ölçüm |
@@ -32,10 +32,11 @@ Tarih: 2026-11-07 · Durum: AÇIK
 ## FMEA
 | # | Olası hata | Ş | O | T | RPN | Önlem |
 |---|---|---|---|---|---|---|
-| F1 | 0005'ten önce kurulum (`svc_kurulum`) yapılır: 0003'ün parolasız giriş kapısı anahtar kurulunca çalışır hâle gelir | 5 | 2 | 4 | 40 | `supabase/CLAUDE.md` Durum tablosunda yazılı. Kalıcı önlem 0005'in uygulanması |
+| F1 | 0005'ten önce kurulum (`svc_kurulum`) yapılır: 0003'ün parolasız giriş kapısı anahtar kurulunca çalışır hâle gelir | 5 | 2 | 4 | 40 | KAPANDI: 0005 canlıda, `svc_s_giris_basarili` oturum istiyor (07:17 UTC ölçüldü) |
 | F2 | Elle SQL Editor uygulaması `schema_migrations`'a düşmez; "yazıldı = uygulandı" yanılgısı (TEHAİ 044–046 vakası) | 4 | 3 | 3 | 36 | Elle uygulamadan sonra eserler ölçülür (sütun, fonksiyon, yetki) |
 | F3 | Sorulu dosya yine MCP ile denenir, 230 sn ve bir tur kaybolur | 2 | 4 | 2 | 16 | `node araclar/mcp-soru-tahmini.mjs` uygulamadan önce (`supabase/CLAUDE.md` Tuzaklar) |
-| F4 | Tahmin aracı sunucudan sapar (sunucu kodu değişir), "sorusuz" der ama soru çıkar | 2 | 2 | 3 | 12 | Zaman aşımında N3 yeniden ölçülür, araç güncellenir |
+| F4 | Tahmin aracı sunucudan sapar (sunucu kodu değişir), "sorusuz" der ama soru çıkar | 2 | 2 | 3 | 12 | Zaman aşımında N3 yeniden ölçülür, araç güncellenir. İlk sürüm "UPDATE without WHERE"ü atlıyordu; 2026-11-07'de eklendi |
+| F5 | Migration bölününce canlı ara durumda kalır (0005'te `svc_talep_olustur` iki sürüm, eski durum seti) | 3 | 3 | 4 | 36 | `SON=<son> bash supabase/tests/yerel-kurulum.sh` ara durumu ölçer; 0006 API yazılmadan uygulanır |
 
 ## Doğrulama
 - Canlı (salt okuma): `schema_migrations` son = `0004_modul1_saha`, MD5 `964f018d…` = dosya. `svc_oturumlar` yok, 0005 fonksiyonu 0. `svc_ayarlar` 0 satır. anon tablo yetkisi 0.
@@ -45,7 +46,8 @@ Tarih: 2026-11-07 · Durum: AÇIK
 ## Önleyici çözüm
 - Yapıldı: `araclar/mcp-soru-tahmini.mjs` ve `supabase/CLAUDE.md` Tuzaklar kuralı ("SORU ÇIKAR" diyen dosya MCP ile denenmez).
 - Yapıldı: bu teşhis protokolü ve `araclar/teshis.mjs` denetleyicisi (`dogrula.sh` 7. kontrol). Ölçümsüz DOĞRULANDI/ELENDİ yazılamaz.
-- Burak kararı bekliyor: 0005 ve 0006'nın canlıya hangi yoldan gideceği.
+- Yapıldı (Burak onayı): 0005'teki çalışma zamanı DELETE'i kaldırıldı (oturumlar giriş geçmişi), 0005 sorusuz uygulandı, MD5 `525f045a…` = dosya.
+- Burak kararı bekliyor: 0006'nın (gerçek DROP) canlıya hangi yoldan gideceği.
 
 ## Çöken varsayım
 "MCP onay sorusu yalnız DROP içeren SQL'de çıkar." 2026-11-07'de ölçülmeden kabul edildi, aynı gün 0005 ile çöktü.

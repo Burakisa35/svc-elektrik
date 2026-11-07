@@ -13,10 +13,9 @@
 ## Durum (2026-11-07)
 | Migration | Durum | Güven |
 |---|---|---|
-| 0000–0004 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı (0004 `964f018d…`, 2026-11-07 06:57 UTC, uygulama anında bütün `svc_` tabloları 0 satır) | Yüksek |
-| 0005 | **Yazıldı, uygulanmadı.** Parola doğrulaması ve oturum DB'de. Fonksiyon gövdesindeki `delete from svc_oturumlar …` onay sorusu çıkarıyor (aşağıda Tuzaklar). Yerelde boş PG 16'da 0000→0006 kuruldu, `db-oturum.sql` 15/15 | Yüksek (yerel PG 16) · canlı PG 17: Doğrulanmadı |
-| 0006 | **Yazıldı, uygulanmadı.** Yalnız DROP/durum seti; gerçek silme olduğu için onay sorusu meşru | Yüksek |
-| Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı. **0005 canlıya geçmeden yapılmaz:** 0003'ün parolasız giriş kapısı (`svc_s_giris_basarili`, anon'a açık) anahtar kurulduğu an çalışır hâle gelir | Yüksek (canlı yetki listesi ölçüldü) |
+| 0000–0005 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı (0004 `964f018d…` 06:57 UTC, 0005 `525f045a…` 07:16 UTC; ikisinde de bütün `svc_` tabloları 0 satır). 0005 sonrası: `svc_sahip_dogrula` oturum istiyor, `svc_s_giris_baslat` özet döndürmüyor, iç kapılar anon'a kapalı, danışman yalnız beklenen iki bulgu | Yüksek |
+| 0006 | **Yazıldı, uygulanmadı.** Yalnız DROP/durum seti; gerçek silme olduğu için onay sorusu meşru ve bu oturumdan cevaplanamaz. **Ara durum (0005'te):** `svc_talep_olustur` iki sürüm yan yana, 13 parametreli çağrı "not unique" verir; durum CHECK'i eski set ('beklemede' var, 'ertelendi'/'kacirildi' yok). `SON=0005 bash supabase/tests/yerel-kurulum.sh` bu iki farkı KALDI olarak gösterir | Yüksek (yerel ölçüm) |
+| Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı. 0003'ün parolasız giriş açığı 0005 ile kapandı (`svc_s_giris_basarili` artık oturum istiyor, canlıda ölçüldü). Talep formu ve iş durumları için önce 0006 | Yüksek |
 
 **API sözleşmesi (0005 sonrası):** giriş = `svc_s_giris_baslat` (salt, iterasyon) → sunucu PBKDF2 600k → `svc_s_giris_tamamla(anahtar, türetilmiş_hex, istemci)` → dönen `oturum` httpOnly çereze. Bundan sonraki her sahip RPC'si `x-bee-oturum: <token>` başlığıyla POST edilir. İlk parola: `svc_s_sifre_kur(anahtar, sha256(türetilmiş), salt, 600000)`. Çıkış: `svc_s_cikis`. Başlığın Supabase gateway'inden PostgREST'e geçtiği Supabase'in kendi örneğine dayanıyor (`x-app-api-key`, Yüksek); bu projede canlıda ölçülmedi.
 

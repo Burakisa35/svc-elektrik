@@ -7,6 +7,7 @@
 --   * Başarılı girişte DB oturum token'ı üretir; yalnız sha256'sı svc_oturumlar'da durur.
 --   * svc_sahip_dogrula = anahtar + geçerli oturum (başlık: x-bee-oturum). Diğer fonksiyonların imzası değişmez.
 --   * Anahtar-yalnız fonksiyonlar: giriş (baslat/tamamla), kurulum (baslat/sifre_kur).
+-- Oturum satırları silinmez (giriş geçmişi; silme kodu yok, bu yüzden MCP onay sorusu çıkmaz: araclar/teshis/T-001).
 -- Veri etkisi: svc_giris 0 satır (canlıda ölçüldü 2026-11-07).
 select public.svc_kimlik_dogrula('uwmbtaxxdcjumxbnigpy');
 
@@ -26,7 +27,7 @@ create table public.svc_oturumlar (
 alter table public.svc_oturumlar enable row level security;
 revoke all on table public.svc_oturumlar from anon, authenticated;
 comment on table public.svc_oturumlar is
-  'Sahip oturumları. Token düz saklanmaz. Kayan süre 30 gün, mutlak tavan 90 gün (olusturma + 90 gün).';
+  'Sahip oturumları. Token düz saklanmaz. Kayan süre 30 gün, mutlak tavan 90 gün (olusturma + 90 gün). Süresi dolan satır silinmez: giriş geçmişidir (Burak, 2026-11-07).';
 
 -- ═══ Kapılar ═════════════════════════════════════════════════════════════════════════════
 -- Yalnız anahtar (giriş ve kurulum için).
@@ -107,7 +108,6 @@ begin
   if p_turetilmis ~ '^[0-9a-f]{64}$'
      and encode(sha256(decode(p_turetilmis, 'hex')), 'hex') = g.password_hash then
     update svc_giris set hata_sayisi = 0, kilit_sayisi = 0, kilit_bitis = null, updated_at = now() where id = 1;
-    delete from svc_oturumlar where bitis < now() - interval '30 days';
     v_token := encode(extensions.gen_random_bytes(32), 'hex');
     v_bitis := now() + interval '30 days';
     insert into svc_oturumlar (token_hash, bitis, istemci)

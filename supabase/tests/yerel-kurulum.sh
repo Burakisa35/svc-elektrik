@@ -2,6 +2,7 @@
 # Sıfırdan kurulum testi (brief 008 T1b'nin yerel karşılığı): boş PostgreSQL 16'da Supabase taklidi +
 # bütün migration'lar sırayla + DB testleri. Canlıya dokunmaz, ücretsizdir, her koşuda sıfırdan başlar.
 # Çalıştırma (repo kökünden, root): bash supabase/tests/yerel-kurulum.sh
+# SON=0005 bash supabase/tests/yerel-kurulum.sh → 0005'te durur (canlıda henüz uygulanmamış migration varken o durumu ölçer).
 # Sınır: yerel PG 16, canlı PG 17. PostgREST/gateway davranışı (başlık iletimi) burada ölçülmez.
 set -u
 cd "$(dirname "$0")/../.." || exit 1
@@ -21,6 +22,7 @@ psqlx -f supabase/tests/supabase-taklit.sql >/dev/null 2>&1 && echo "GEÇTİ  Su
 for f in supabase/migrations/*.sql; do
   if hata=$(psqlx -1 -f "$f" 2>&1 >/dev/null); then echo "GEÇTİ  $(basename "$f")"
   else echo "KALDI  $(basename "$f") — $(echo "$hata" | head -2 | tr '\n' ' ')"; kalan=$((kalan+1)); break; fi
+  case "$(basename "$f")" in "${SON:-yok}"_*) echo "DUR    SON=$SON (canlının o anki durumu)"; break;; esac
 done
 # DB testleri kasıtlı "BEE_TEST_SONUC kalan=N" hatasıyla biter; N=0 beklenir.
 for t in supabase/tests/db-*.sql; do
