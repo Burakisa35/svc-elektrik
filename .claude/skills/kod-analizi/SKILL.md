@@ -79,7 +79,7 @@ RPN = Ş × O × T. **Önce:** Ş = 5 olan her satır, sonra RPN ≥ 40 olanlar.
 - **Canlı:** yalnız salt okuma. Test verisi geri alınır (`BEE_TEST_SONUC` kalıbı, sayaçlar `setval` ile yerine). Yıkıcı SQL'in onay sorusu bu oturumdan cevaplanamaz: önce `node araclar/mcp-soru-tahmini.mjs`.
 - **Gizlilik:** kayda anahtar, token, müşteri adı ya da telefonu yazılmaz. Örnek veri uydurmadır ve öyle işaretlenir.
 - **Güven etiketi:** her iddia Yüksek / Orta / Doğrulanmadı taşır. Test edilemeyen hipotez "Doğrulanmadı" diye açıkça bırakılır.
-- **Çakışma:** bu skill yöntemi tanımlar. Kayıt biçimi `_SABLON.md`'de, görülmüş belirtiler `BELIRTILER.md`'de, denetim `teshis.mjs`'tedir. Aynı kural ikinci yere kopyalanmaz.
+- **Çakışma:** bu skill teşhis katmanıdır; hangi işin yapılacağı, kabul kriteri ve "bitti" kararı `AKTIF.md`'dedir. Bu skill yöntemi tanımlar. Kayıt biçimi `_SABLON.md`'de, görülmüş belirtiler `BELIRTILER.md`'de, denetim `teshis.mjs`'tedir. Aynı kural ikinci yere kopyalanmaz.
 
 ## Rapor (her vaka sonunda, sohbete)
 

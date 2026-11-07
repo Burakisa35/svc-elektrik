@@ -14,6 +14,7 @@ Bu dosya hem Claude Code hem sohbet tarafındaki Claude için bağlayıcıdır. 
 | `.claude/hooks/*-test.sh` (koruma testleri, bozma testi dahil) | Claude Code | — |
 | `.claude/hooks/koruma.py`, `.claude/settings.json` | Claude Code önerir; **Burak onayıyla, PR ile** girer (Burak, 2026-11-07) | Code kendi korumasını tek başına gevşetemez |
 | `TESLIMLER.md` (teslim kaydı) | Claude Code: "Durum" sütunu | Sohbet Claude'u: "Denetim" sütunu (kapanış kararı) |
+| `AKTIF.md` (tek aktif iş, WIP = 1) | Claude Code yazar; aktif işi ve sırayı Burak seçer | Sohbet Claude'u okur; yeni brief "Bekleyenler"e girer |
 | Karar, öncelik, saha doğrulaması | Burak | — |
 
 Kurallar:
@@ -53,13 +54,13 @@ Arayüz ve dokümanlar Türkçe. Kısa, doğrudan, dolgusuz. Kod yorumları Tür
 
 ## Komutlar
 
-**Oturum başı (Code):** `TESLIMLER.md` ve `git log --oneline -10` okunur, sonra `bash araclar/dogrula.sh` çalıştırılır. KALDI satırı varken yeni iş açılmaz.
+**Oturum başı (Code):** `AKTIF.md`, `TESLIMLER.md` ve `git log --oneline -10` okunur, sonra `bash araclar/dogrula.sh` çalıştırılır. KALDI satırı varken yeni iş açılmaz. Aktif iş kapanmadan yeni iş başlamaz; yeni fikir ya da brief `AKTIF.md` "Bekleyenler"e yazılır (Burak, 2026-11-07).
 **Teslim:** bir madde ancak kanıtı (komut çıktısı ya da commit) varsa "teslim edildi" yazılır. Kapanış kararı denetleyenindir (`TESLIMLER.md` "Denetim" sütunu).
 **Belirti, yeni özellik, iyileştirme, regresyon (Code):** yöntem `.claude/skills/kod-analizi/SKILL.md` (Belirti → Kanıt → Ishikawa → 5 Neden → RCA → FMEA → Düzeltme → Doğrulama → Öğrenim). İlk bakış `araclar/teshis/BELIRTILER.md`; kayıt `araclar/teshis/_SABLON.md` ile `T-NNN`. Ölçülmeyen neden ADAY kalır; `node araclar/teshis.mjs` denetler. Açık adaylar: `araclar/teshis/ADAYLAR.md`.
 **Migration uygulamadan önce:** `node araclar/mcp-soru-tahmini.mjs`. "SORU ÇIKAR" diyen dosya bu oturumdan MCP ile uygulanamaz (`supabase/CLAUDE.md` Tuzaklar).
 
 ```bash
-bash araclar/dogrula.sh    # tek komut: hook testi, JS sözdizimi, migration kimlik kapısı, TESLIMLER bütünlüğü, teşhis kayıtları, sıfırdan kurulum (7 kontrol, ~3 sn)
+bash araclar/dogrula.sh    # tek komut: hook testi, JS sözdizimi, migration kimlik kapısı, TESLIMLER bütünlüğü, teşhis kayıtları, tek aktif iş, sıfırdan kurulum (8 kontrol, ~3 sn)
 ```
 Canlı DB kontrolleri (migration MD5'i, `supabase/tests/db-erisim.sql` erişim testi) yerelde koşmaz; MCP ya da SQL Editor ile yapılır: `supabase/CLAUDE.md`. Tümü 2026-11-07'de denendi.
 Koruma: `.claude/settings.json` hook'u, Code'un `knowledge/` ve `docs/` yazmasını Edit/Write **ve** Bash'te engellemek için yazıldı. Birim testinde engelliyor (Yüksek). Canlı oturumda engellediği **Doğrulanmadı**: 2026-11-07'deki iki oturumda deneme engellenmedi; oturumlar repo kökünde açılmadığı için hook yüklenmemiş olabilir (Orta). Yolu metinde geçmeyen betikle yazma yakalanmaz.
@@ -77,5 +78,6 @@ docs/references/   Supabase, Vercel, CLAUDE.md kullanım rehberleri (src/ ve sup
 src/               uygulama (Claude Code); durum ve kurallar src/CLAUDE.md
 supabase/          migration'lar + DB testi (Claude Code); supabase/CLAUDE.md
 TESLIMLER.md       brief teslim kaydı: Code durum yazar, denetleyen kapatır
+AKTIF.md           tek aktif iş (WIP = 1): kabul kriteri, risk-temelli test, bitti tanımı, durdurma kuralı, bekleyenler
 araclar/           Claude Code'un araçları: dogrula.sh (tek komut), teshis/ (belirti → teşhis), mcp-soru-tahmini.mjs
 ```
