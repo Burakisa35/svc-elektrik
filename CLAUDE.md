@@ -55,7 +55,7 @@ Arayüz ve dokümanlar Türkçe. Kısa, doğrudan, dolgusuz. Kod yorumları Tür
 
 **Oturum başı (Code):** `TESLIMLER.md` ve `git log --oneline -10` okunur, sonra `bash araclar/dogrula.sh` çalıştırılır. KALDI satırı varken yeni iş açılmaz.
 **Teslim:** bir madde ancak kanıtı (komut çıktısı ya da commit) varsa "teslim edildi" yazılır. Kapanış kararı denetleyenindir (`TESLIMLER.md` "Denetim" sütunu).
-**Belirti (Code):** araç hatası, zaman aşımı, kırmızı test ya da beklenmeyen canlı değer görülünce önce `araclar/teshis/BELIRTILER.md` (ilk ölçüm), karmaşıksa `_SABLON.md` ile `T-NNN` kaydı (RCA · 5 Neden · Ishikawa · FMEA). Ölçülmeyen neden ADAY kalır; `node araclar/teshis.mjs` denetler.
+**Belirti, yeni özellik, iyileştirme, regresyon (Code):** yöntem `.claude/skills/kod-analizi/SKILL.md` (Belirti → Kanıt → Ishikawa → 5 Neden → RCA → FMEA → Düzeltme → Doğrulama → Öğrenim). İlk bakış `araclar/teshis/BELIRTILER.md`; kayıt `araclar/teshis/_SABLON.md` ile `T-NNN`. Ölçülmeyen neden ADAY kalır; `node araclar/teshis.mjs` denetler. Açık adaylar: `araclar/teshis/ADAYLAR.md`.
 **Migration uygulamadan önce:** `node araclar/mcp-soru-tahmini.mjs`. "SORU ÇIKAR" diyen dosya bu oturumdan MCP ile uygulanamaz (`supabase/CLAUDE.md` Tuzaklar).
 
 ```bash

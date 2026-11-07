@@ -1,13 +1,14 @@
 // araclar/teshis/T-*.md teşhis kayıtlarını denetler. Amaç: ölçülmeyen nedenin "kesin" yazılmasını mekanik olarak engellemek.
-// Kurallar (_SABLON.md): zorunlu bölümler · nedenler ADAY/DOĞRULANDI/ELENDİ · ADAY dışındaki her neden ölçümlü ·
-// 5 Neden'in her halkasında "test:" · Ishikawa'da en az 4 dal dolu · FMEA puanları 1–5 ve RPN = Ş×O×T ·
-// KAPANDI için en az bir DOĞRULANDI ve dolu önleyici çözüm.
+// Kurallar (_SABLON.md; yöntem .claude/skills/kod-analizi/SKILL.md): 10 zorunlu bölüm (9 protokol adımı + eleştirel
+// sorular) · Kanıt'ta en az bir `…` referansı · RCA nedenleri ADAY/DOĞRULANDI/ELENDİ, ADAY dışındaki her neden ölçümlü ·
+// 5 Neden'in her halkasında "test:" · Ishikawa'da 6 daldan en az 4'ü dolu · FMEA puanları 1–5 ve RPN = Ş×O×T ·
+// 7 eleştirel soru cevaplı · KAPANDI için en az bir DOĞRULANDI, dolu Düzeltme ve Öğrenim.
 // Kullanım: node araclar/teshis.mjs [dizin]   (varsayılan araclar/teshis). Çıkış kodu = kalan kayıt sayısı.
 import { readFileSync, readdirSync } from 'node:fs';
 
 const dizin = process.argv[2] || 'araclar/teshis';
-const ZORUNLU = ['Belirti', 'Olası nedenler', '5 Neden', 'Ishikawa', 'FMEA', 'Doğrulama', 'Önleyici çözüm', 'Çöken varsayım'];
-const DALLAR = ['İnsan', 'Araç', 'Yöntem', 'Girdi', 'Ölçüm', 'Ortam'];
+const ZORUNLU = ['Belirti', 'Kanıt', 'Ishikawa', '5 Neden', 'RCA', 'FMEA', 'Düzeltme', 'Doğrulama', 'Öğrenim', 'Eleştirel sorular'];
+const DALLAR = ['Arayüz', 'Veri', 'İş mantığı', 'Entegrasyon', 'Mimari', 'Test'];
 const BOS = /^\s*(—|-|–)?\s*$/;
 const hucreler = satir => satir.split('|').slice(1, -1).map(h => h.trim());
 
@@ -26,7 +27,9 @@ for (const ad of kayitlar) {
   const durum = md.match(/Durum:\s*(AÇIK|KAPANDI)\b/)?.[1];
   if (!durum) sorun.push('Durum: AÇIK | KAPANDI satırı yok');
 
-  const nedenler = (bolum['Olası nedenler'] || '').split('\n').filter(s => /^\|\s*N\d+/.test(s)).map(hucreler);
+  if (bolum['Kanıt'] && !/`[^`]+`/.test(bolum['Kanıt'])) sorun.push('Kanıt: `dosya:satır` ya da komut referansı yok');
+
+  const nedenler = (bolum['RCA'] || '').split('\n').filter(s => /^\|\s*N\d+/.test(s)).map(hucreler);
   if (!nedenler.length) sorun.push('olası neden tablosu boş');
   for (const [no, , d, guven, olcum] of nedenler) {
     if (!['ADAY', 'DOĞRULANDI', 'ELENDİ'].includes(d)) sorun.push(`${no}: durum "${d}" geçersiz`);
@@ -35,7 +38,10 @@ for (const ad of kayitlar) {
     if (d !== 'ADAY' && guven === 'Doğrulanmadı') sorun.push(`${no}: ${d} ile "Doğrulanmadı" çelişiyor`);
   }
   if (durum === 'KAPANDI' && !nedenler.some(n => n[2] === 'DOĞRULANDI')) sorun.push('KAPANDI ama DOĞRULANDI neden yok');
-  if (durum === 'KAPANDI' && BOS.test(bolum['Önleyici çözüm'] || '')) sorun.push('KAPANDI ama önleyici çözüm boş');
+  for (const b of ['Düzeltme', 'Öğrenim']) if (durum === 'KAPANDI' && BOS.test(bolum[b] || '')) sorun.push(`KAPANDI ama ${b} boş`);
+
+  const sorular = (bolum['Eleştirel sorular'] || '').split('\n').filter(s => /^[1-7]\.\s*\S/.test(s));
+  if (bolum['Eleştirel sorular'] && sorular.length < 7) sorun.push(`Eleştirel sorular: ${sorular.length}/7 cevaplı`);
 
   const halkalar = (bolum['5 Neden'] || '').split('\n').filter(s => /^\d+\./.test(s));
   if (!halkalar.length) sorun.push('5 Neden zinciri yok');
