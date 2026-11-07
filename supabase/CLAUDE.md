@@ -44,6 +44,7 @@ md5sum supabase/migrations/*.sql
 Yerel kurulum canlıya dokunmaz ve ücretsizdir. İkinci bir Supabase projesine gerek kalmadan "migration'lar sıfırdan kurulabiliyor mu" sorusunu ölçer. Sınırı: PostgREST ve gateway yok; sürüm farkı var (16 / canlı 17).
 Canlıdaki karşılığı: `select name, md5(array_to_string(statements,'')) from supabase_migrations.schema_migrations order by version;`
 
-Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum (2026-11-07): 38/38, sayaçlar yerinde kaldı.
+Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum (2026-11-07, 0003 durumunda): 38/38, sayaçlar yerinde kaldı. **0006 canlıda yokken `db-erisim.sql` canlıda koşulmaz:** 13 parametreli çağrıda "not unique" ile yarıda kesilir ve sayaçları geri yüklemeden çıkar, bu da ilk gerçek işin numarasını kaydırır. `db-oturum.sql` sayaç kullanmaz: canlı PG 17'de 2026-11-07'de 14/15 (G2 0006'ya bağlı), yereldeki `SON=0005` ile aynı.
+Bozma testi: `bash supabase/tests/bozma.sh`. Testler korudukları kod bozulunca kırmızıya dönüyor mu? 2026-11-07'de 11/17. Yaşayanlar `AKTIF.md` Bekleyenler'de.
 
 Denetim (her migration'dan sonra): MCP `get_advisors` güvenlik + performans. Beklenen kalıcı bulgular: `rls_enabled_no_policy` (INFO, kasıtlı) ve `anon_security_definer_function_executable` (WARN, kasıtlı; her fonksiyon anahtar ister). Bunların dışında çıkan her bulgu incelenir.

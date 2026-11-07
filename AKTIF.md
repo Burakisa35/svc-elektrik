@@ -22,13 +22,17 @@ Başlangıç: 2026-11-07 · Durum: sürüyor
 | Çelişkili durum isteği sessizce yutuluyor (ADAYLAR Vaka 3) | 4 | DB | `db-is.sql` (yazılacak, önce kırmızı) |
 | DB hata metni tarayıcıya sızıyor (`src/api/panel.js:34`) | 3 | API sözleşmesi | yanıt yalnız `BEE_*` eşlemesi taşır |
 | iOS'a özgü: çerez, Safari, ana ekran | 3 | Gerçek cihaz | Burak, K1–K6 |
+| Gateway başlığı geçirmezse oturum modeli hiç çalışmaz (D8) | 5 | Canlı HTTP | `svc_saglik` yoklaması (adım 1) |
+| Kilit süresi 35. turda taşıyor, kilit hiç devreye girmiyor: sınırsız deneme (D1) | 5 | DB | 35. tur testi |
+| Çıkış reddedilse de "çıkıldı" görünüyor (O6 ölçütü, D2) | 4 | DB + API | çıkış sonucu ayrıca doğrulanır |
+| Herkese açık girişte 5 yanlışla Burak 24 saate kadar dışarıda kalır (D6) | 4 | API | IP başına ön sınır |
 | Mobil düzen: taşma, 44 px hedef, 16 px yazı | 2 | Tarayıcı (Chromium 375×667 ve iPhone 11 boyutu) | ekran ölçümü |
 
-### Bağımlılık sırası
-1. [ ] `0006` canlıda. 07:2x'teki ilk deneme veritabanına ulaşmadı (`postgres_logs`, `log_statement=ddl`; TEHAİ'de de iz yok)
-2. [ ] Önce test: `db-is.sql` ve yarış testi yazılır, ilk koşuda kırmızı
-3. [ ] `0007`: Vaka 1 ve Vaka 3 düzeltmesi, testler yeşil. Burak onayıyla uygulanır
-4. [ ] API: giriş/çıkış, iş aç, güncelle, oku (`svc_*` sözleşmesi, service_role yok)
+### Bağımlılık sırası (denetim sonrası, 2026-11-07: `araclar/teshis/DENETIM-2026-11-07.md`)
+1. [ ] Başlık yoklaması: gateway `x-bee-oturum`'u veritabanına geçiriyor mu? Dilimin en riskli ölçülmemiş varsayımı (D8). Küçük migration (`svc_saglik`, yalnız "başlık geldi mi" boolean'ı), Burak onayıyla
+2. [ ] Önce test, ilk koşuda kırmızı: K2 yeniden deneme (B14, Vaka 1), K3 çelişkili istek (C3), K5 kilidin 35. turda taşması (D1), K6 çıkış ölçütü (O6/B17)
+3. [ ] `0007`: bu dört davranışın düzeltmesi. Testler yeşil, `bozma.sh`'ta B14 ve B17 ölür. Burak onayıyla uygulanır
+4. [ ] API: giriş/çıkış, iş aç, güncelle, oku (`svc_*` sözleşmesi, service_role yok, IP başına giriş ön sınırı)
 5. [ ] Tek ekran (panel)
 6. [ ] Kurulum: `svc_kurulum` anahtarları, Vercel ortam değişkenleri, önizleme adresi
 7. [ ] Burak telefon testi, K1–K6
@@ -42,6 +46,12 @@ Başlangıç: 2026-11-07 · Durum: sürüyor
 Bitti tanımı sağlanınca dilim kapanır. Yeni iyileştirme fikri "Bekleyenler"e gider. Bu dilimde yok: görsel cila, tutar alanı, müşteri linki, talep formu.
 
 ## Bekleyenler (sırayı Burak seçer)
+- `0006`: talep formu ve `ertelendi`/`kacirildi` için gerekli, dilim 1 için değil (D7). Mobilde Run yok; yol Burak kararı: masaüstü, yıkıcı olmayan sürüm (`rename` + `revoke`) ya da Management API.
+- Test borcu (`bozma.sh`'ta yaşayanlar): B07 (O8 iki kapıyı da denemeli), B09 (olay kaydı: silme ve `postgres` rolü), B10 (iş silinmezliği), B15 (kurulum kilidi).
+- D4 kararı: yeniden açılan işte bitiş zamanı silinsin mi, "ilk bitiş" mi kalsın? (Burak)
+- D5: koruma hook'u canlıda çalışmıyor (3. oturum). ADAY: `settings.json` yüklenmiyor.
+- D6: kilit tasarımı (global ya da istemci başına) karşılaştırması.
+- "Bütün oturumları kapat" yolu yok (kayıp telefon).
 - Vaka 2, tutar: NaN kabulü ve virgüllü tutarın kaydı düşürmesi (`araclar/teshis/ADAYLAR.md`). Sonraki dilim.
 - C5 kararı: iptal edilmiş iş tamamlanabilir mi? (Burak)
 - Skill'i üçe bölme (goal-planner / code-executor / root-cause). 2026-11-07 ertelendi; bu dosya ilk ikisinin işini görüyor.
