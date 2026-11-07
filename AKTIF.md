@@ -30,8 +30,8 @@ Başlangıç: 2026-11-07 · Durum: sürüyor
 
 ### Bağımlılık sırası (denetim sonrası, 2026-11-07: `araclar/teshis/DENETIM-2026-11-07.md`)
 1. [x] Başlık yoklaması (D8): gateway `x-bee-oturum`'u veritabanına **geçiriyor** (2026-11-07 08:0x UTC, gerçek HTTP: başlıksız false, doğru başlık true, büyük harfli ad true, bozuk değer false, anahtarsız 401). `0007_saglik` canlıda, MD5 `644af796…` = dosya
-2. [ ] Önce test, ilk koşuda kırmızı: K2 yeniden deneme (B14, Vaka 1), K3 çelişkili istek (C3), K5 kilidin 35. turda taşması (D1), K6 çıkış ölçütü (O6/B17)
-3. [ ] `0007`: bu dört davranışın düzeltmesi. Testler yeşil, `bozma.sh`'ta B14 ve B17 ölür. Burak onayıyla uygulanır
+2. [x] Önce test, ilk koşuda kırmızı (2026-11-07): `db-is.sql` I3, I4, I7; `db-oturum.sql` G6, G7; `yaris-is.sh` Y1 kırmızıydı. I1, I2, I5, I6, I8, O6a, O6, Y2 geçiyordu. Y1, `svc_musteri_bul_ac`'taki müşteri yarışını da gösterdi
+3. [ ] `0008_dilim1_duzeltme`: bu davranışların düzeltmesi. Yerelde bütün testler yeşil; canlı modeli (`ATLA=0006`) yalnız 0006'ya bağlı 2 bilinen KALDI. B17 öldü; B04 ve B14 0008'e hedeflenince öldü (G3, G4, G6 / I2, Y1). **Canlıya uygulama Burak onayı bekliyor**
 4. [ ] API: giriş/çıkış, iş aç, güncelle, oku (`svc_*` sözleşmesi, service_role yok, IP başına giriş ön sınırı)
 5. [ ] Tek ekran (panel)
 6. [ ] Kurulum: `svc_kurulum` anahtarları, Vercel ortam değişkenleri, önizleme adresi

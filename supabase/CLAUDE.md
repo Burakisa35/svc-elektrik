@@ -16,6 +16,7 @@
 | 0000–0005 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı (0004 `964f018d…` 06:57 UTC, 0005 `525f045a…` 07:16 UTC; ikisinde de bütün `svc_` tabloları 0 satır). 0005 sonrası: `svc_sahip_dogrula` oturum istiyor, `svc_s_giris_baslat` özet döndürmüyor, iç kapılar anon'a kapalı, danışman yalnız beklenen iki bulgu | Yüksek |
 | 0007 | Canlıda (2026-11-07 08:0x UTC), MD5 `644af796…` = dosya. `svc_saglik()` duman testi: gateway `x-bee-oturum`'u geçiriyor (gerçek HTTP ile ölçüldü). `security invoker`, tablo okumaz | Yüksek |
 | 0006 | **Yazıldı, uygulanmadı.** Yalnız DROP/durum seti; gerçek silme olduğu için onay sorusu meşru ve bu oturumdan cevaplanamaz. **Ara durum (0005'te):** `svc_talep_olustur` iki sürüm yan yana, 13 parametreli çağrı "not unique" verir; durum CHECK'i eski set ('beklemede' var, 'ertelendi'/'kacirildi' yok). `SON=0005 bash supabase/tests/yerel-kurulum.sh` bu iki farkı KALDI olarak gösterir | Yüksek (yerel ölçüm) |
+| 0008 | **Yazıldı, uygulanmadı (Burak onayı bekliyor).** Dilim 1 düzeltmeleri: `svc_s_is_olustur` (boş/bozuk `istemci_id`, eşzamanlı tekrar deneme), `svc_s_is_guncelle` (çelişkili istek), kilit üssünün sınırı (`svc_s_giris_tamamla`, `svc_s_kurulum_baslat`). Gövdeler 0004/0005'ten programla kopyalandı, yalnız hedef satırlar değişti. Yerelde tam ve `ATLA=0006` canlı modeli ölçüldü | Yüksek (yerel PG 16) |
 | Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı. 0003'ün parolasız giriş açığı 0005 ile kapandı (`svc_s_giris_basarili` artık oturum istiyor, canlıda ölçüldü). Talep formu ve iş durumları için önce 0006 | Yüksek |
 
 **API sözleşmesi (0005 sonrası):** giriş = `svc_s_giris_baslat` (salt, iterasyon) → sunucu PBKDF2 600k → `svc_s_giris_tamamla(anahtar, türetilmiş_hex, istemci)` → dönen `oturum` httpOnly çereze. Bundan sonraki her sahip RPC'si `x-bee-oturum: <token>` başlığıyla POST edilir. İlk parola: `svc_s_sifre_kur(anahtar, sha256(türetilmiş), salt, 600000)`. Çıkış: `svc_s_cikis`. Başlık gateway'den `request.headers`'a geçiyor: 2026-11-07'de canlıda gerçek HTTP ile ölçüldü (`/rest/v1/rpc/svc_saglik`; başlıksız false, doğru başlık true, büyük harfli ad true, anahtarsız 401; Yüksek). Duman testi: aynı istek her deploy'dan sonra.
@@ -39,13 +40,16 @@ Kalan risk: anahtar ile canlı çerez **birlikte** çalınırsa erişim açılı
 
 ## Komutlar
 ```bash
-bash supabase/tests/yerel-kurulum.sh   # boş PG 16'da Supabase taklidi + 0000→son migration + db-*.sql testleri (~2 sn, root)
+bash supabase/tests/yerel-kurulum.sh   # boş PG 16'da Supabase taklidi + 0000→son migration + db-*.sql + yaris-*.sh (~5 sn, root)
+SON=0005 bash supabase/tests/yerel-kurulum.sh    # 0005'te durur
+ATLA=0006 bash supabase/tests/yerel-kurulum.sh   # 0006'yı atlar: canlının bugünkü durumu (0006 uygulanmadı)
 md5sum supabase/migrations/*.sql
 ```
+`yaris-*.sh` iki oturum ister ve hazırlığı kalıcı yazar: **yalnız yerelde**. `db-is.sql` canlıda koşulabilir; gövde hata verse bile sayaçları önce geri yükler.
 Yerel kurulum canlıya dokunmaz ve ücretsizdir. İkinci bir Supabase projesine gerek kalmadan "migration'lar sıfırdan kurulabiliyor mu" sorusunu ölçer. Sınırı: PostgREST ve gateway yok; sürüm farkı var (16 / canlı 17).
 Canlıdaki karşılığı: `select name, md5(array_to_string(statements,'')) from supabase_migrations.schema_migrations order by version;`
 
 Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum (2026-11-07, 0003 durumunda): 38/38, sayaçlar yerinde kaldı. **0006 canlıda yokken `db-erisim.sql` canlıda koşulmaz:** 13 parametreli çağrıda "not unique" ile yarıda kesilir ve sayaçları geri yüklemeden çıkar, bu da ilk gerçek işin numarasını kaydırır. `db-oturum.sql` sayaç kullanmaz: canlı PG 17'de 2026-11-07'de 14/15 (G2 0006'ya bağlı), yereldeki `SON=0005` ile aynı.
-Bozma testi: `bash supabase/tests/bozma.sh`. Testler korudukları kod bozulunca kırmızıya dönüyor mu? 2026-11-07'de 11/17. Yaşayanlar `AKTIF.md` Bekleyenler'de.
+Bozma testi: `bash supabase/tests/bozma.sh`. Testler korudukları kod bozulunca kırmızıya dönüyor mu? 2026-11-07'de 11/17. Yaşayanlar `AKTIF.md` Bekleyenler'de. **0008'den sonra B04, B06, B14 ve B15 eski dosyaları hedeflediği için etkisiz ("gölgede"):** skor 10/17 yanıltıcıdır. Gölge kontrolü ve 0008 hedefleri `bozma.sh`'a eklenmedi; düzenleme bir güvenlik kontrolüne takıldı ve Burak kararı bekliyor.
 
 Denetim (her migration'dan sonra): MCP `get_advisors` güvenlik + performans. Beklenen kalıcı bulgular: `rls_enabled_no_policy` (INFO, kasıtlı) ve `anon_security_definer_function_executable` (WARN, kasıtlı; her fonksiyon anahtar ister). Bunların dışında çıkan her bulgu incelenir.
