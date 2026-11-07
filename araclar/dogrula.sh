@@ -34,5 +34,13 @@ done
 hata=$(awk -F'|' '/\| *teslim edildi *\|/ { k=$4; gsub(/[ \t—-]/,"",k); if (k=="") print $2 }' "$TESLIM")
 [ -z "$hata" ]; satir $? "TESLIMLER teslim satırları kanıtlı" "kanıtsız:$hata"
 
+# 6. Sıfırdan kurulum: boş PG 16'da bütün migration'lar + DB testleri (yerel PostgreSQL ve root gerekir)
+if [ -x /usr/lib/postgresql/16/bin/initdb ] && [ "$(id -u)" = 0 ]; then
+  cikti=$(bash supabase/tests/yerel-kurulum.sh 2>&1); son=$(echo "$cikti" | tail -1)
+  [ "$son" = "SONUÇ  kalan=0" ]; satir $? "sıfırdan kurulum + DB testleri ($(echo "$cikti" | grep -c '^GEÇTİ') adım, yerel PG 16)" "$(echo "$cikti" | grep KALDI | head -2 | tr '\n' ' ')"
+else
+  echo "ATLANDI sıfırdan kurulum (yerel PostgreSQL 16 ya da root yok) — ölçülmedi, geçti sayılmaz"
+fi
+
 echo "SONUÇ  $((toplam-kalan))/$toplam"
 exit "$kalan"

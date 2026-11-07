@@ -15,7 +15,10 @@
 |---|---|---|
 | 0000–0003 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı | Yüksek |
 | 0004 | **Yazıldı, uygulanmadı.** MCP `apply_migration` onay sorusu 5 kez cevapsız kaldı (pencere Burak'a ulaşmıyor olabilir) | Yüksek |
+| 0005 | **Yazıldı, uygulanmadı.** Parola doğrulaması ve oturum DB'de. Yerelde boş PG 16'da 0000→0005 sıfırdan kuruldu; `db-oturum.sql` 15/15 geçti, 3 bozmanın 3'ü yakalandı | Yüksek (yerel PG 16) · canlı PG 17: Doğrulanmadı |
 | Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı | Yüksek |
+
+**API sözleşmesi (0005 sonrası):** giriş = `svc_s_giris_baslat` (salt, iterasyon) → sunucu PBKDF2 600k → `svc_s_giris_tamamla(anahtar, türetilmiş_hex, istemci)` → dönen `oturum` httpOnly çereze. Bundan sonraki her sahip RPC'si `x-bee-oturum: <token>` başlığıyla POST edilir. İlk parola: `svc_s_sifre_kur(anahtar, sha256(türetilmiş), salt, 600000)`. Çıkış: `svc_s_cikis`. Başlığın Supabase gateway'inden PostgREST'e geçtiği Supabase'in kendi örneğine dayanıyor (`x-app-api-key`, Yüksek); bu projede canlıda ölçülmedi.
 
 ## Yetki modelinin en kritik açığı ve karar önerisi (araştırma 2026-11-07, Burak onayı bekliyor)
 **Açık:** DB yalnız sahip anahtarını doğruluyor, oturumu doğrulamıyor. Vercel ortamı sızarsa saldırgan `svc_s_giris_baslat` ile parola özetini alabilir (çevrimdışı kaba kuvvet), `svc_s_giris_basarili`'yi doğrudan çağırıp parolasız "giriş" yapabilir. Parola, kilit ve çıkıştaki iptal böylece atlanır (Yüksek, kod okundu).
@@ -36,8 +39,10 @@ Kalan risk: anahtar ile canlı çerez **birlikte** çalınırsa erişim açılı
 
 ## Komutlar
 ```bash
+bash supabase/tests/yerel-kurulum.sh   # boş PG 16'da Supabase taklidi + 0000→son migration + db-*.sql testleri (~2 sn, root)
 md5sum supabase/migrations/*.sql
 ```
+Yerel kurulum canlıya dokunmaz ve ücretsizdir. İkinci bir Supabase projesine gerek kalmadan "migration'lar sıfırdan kurulabiliyor mu" sorusunu ölçer. Sınırı: PostgREST ve gateway yok; sürüm farkı var (16 / canlı 17).
 Canlıdaki karşılığı: `select name, md5(array_to_string(statements,'')) from supabase_migrations.schema_migrations order by version;`
 
 Erişim testi: `supabase/tests/db-erisim.sql` dosyasını SQL Editor'de ya da MCP `execute_sql` ile çalıştır. Beklenen sonuç `BEE_TEST_SONUC kalan=0` hatasıdır; hata kasıtlıdır, test verisini geri alır. Son koşum (2026-11-07): 38/38, sayaçlar yerinde kaldı.
