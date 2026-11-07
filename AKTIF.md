@@ -22,14 +22,14 @@ Başlangıç: 2026-11-07 · Durum: sürüyor
 | Çelişkili durum isteği sessizce yutuluyor (ADAYLAR Vaka 3) | 4 | DB | `db-is.sql` (yazılacak, önce kırmızı) |
 | DB hata metni tarayıcıya sızıyor (`src/api/panel.js:34`) | 3 | API sözleşmesi | yanıt yalnız `BEE_*` eşlemesi taşır |
 | iOS'a özgü: çerez, Safari, ana ekran | 3 | Gerçek cihaz | Burak, K1–K6 |
-| Gateway başlığı geçirmezse oturum modeli hiç çalışmaz (D8) | 5 | Canlı HTTP | `svc_saglik` yoklaması (adım 1) |
+| Gateway başlığı geçirmezse oturum modeli hiç çalışmaz (D8) | 5 | Canlı HTTP | `svc_saglik`: **geçiyor** (ölçüldü). Her deploy'dan sonra duman testi |
 | Kilit süresi 35. turda taşıyor, kilit hiç devreye girmiyor: sınırsız deneme (D1) | 5 | DB | 35. tur testi |
 | Çıkış reddedilse de "çıkıldı" görünüyor (O6 ölçütü, D2) | 4 | DB + API | çıkış sonucu ayrıca doğrulanır |
 | Herkese açık girişte 5 yanlışla Burak 24 saate kadar dışarıda kalır (D6) | 4 | API | IP başına ön sınır |
 | Mobil düzen: taşma, 44 px hedef, 16 px yazı | 2 | Tarayıcı (Chromium 375×667 ve iPhone 11 boyutu) | ekran ölçümü |
 
 ### Bağımlılık sırası (denetim sonrası, 2026-11-07: `araclar/teshis/DENETIM-2026-11-07.md`)
-1. [ ] Başlık yoklaması: gateway `x-bee-oturum`'u veritabanına geçiriyor mu? Dilimin en riskli ölçülmemiş varsayımı (D8). Küçük migration (`svc_saglik`, yalnız "başlık geldi mi" boolean'ı), Burak onayıyla
+1. [x] Başlık yoklaması (D8): gateway `x-bee-oturum`'u veritabanına **geçiriyor** (2026-11-07 08:0x UTC, gerçek HTTP: başlıksız false, doğru başlık true, büyük harfli ad true, bozuk değer false, anahtarsız 401). `0007_saglik` canlıda, MD5 `644af796…` = dosya
 2. [ ] Önce test, ilk koşuda kırmızı: K2 yeniden deneme (B14, Vaka 1), K3 çelişkili istek (C3), K5 kilidin 35. turda taşması (D1), K6 çıkış ölçütü (O6/B17)
 3. [ ] `0007`: bu dört davranışın düzeltmesi. Testler yeşil, `bozma.sh`'ta B14 ve B17 ölür. Burak onayıyla uygulanır
 4. [ ] API: giriş/çıkış, iş aç, güncelle, oku (`svc_*` sözleşmesi, service_role yok, IP başına giriş ön sınırı)
