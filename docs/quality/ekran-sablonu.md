@@ -26,7 +26,7 @@ Test genişlikleri: 375 px (küçük iPhone), 414 px (iPhone 11 CSS genişliği,
 |---|---|---|---|---|
 | ES-1 | Renkler, yazı boyutları, boşluklar yalnız `tokens.css` değişkenlerinden gelir (satır içi sabit renk yok) | kaynak taraması (grep) | | ☐ |
 | ES-2 | Tek yazı tipi ailesi, en çok 3 boyut kademesi; başlık/gövde/ikincil ayrımı net | ekran görüntüsü, 375 ve 414 | | ☐ |
-| ES-3 | Görsel hiyerarşi: ekranda yalnız **bir** baskın (dolu) düğme, o da birincil eylem | ekran görüntüsü | | ☐ |
+| ES-3 | Görsel hiyerarşi: **eylem ekranında** yalnız bir baskın (dolu) düğme, o da birincil eylem. **Yönlendirme (ana) ekranında** dolu düğme yok; eşit ağırlıklı en çok 4 giriş (karar 0005, ANA-1) | ekran görüntüsü | | ☐ |
 | ES-4 | Boşluk ölçeği tutarlı (tokens'taki kademeler dışında değer yok) | grep | | ☐ |
 | ES-5 | Durum renkleri anlamla eşleşir (yeni/devam/tamam/iptal) ve **yalnız renkle** anlatılmaz (yazı da var) | ekran görüntüsü | | ☐ |
 | ES-6 | Estetik yön Burak tarafından yazılı onaylandı (renk, ton, 2–3 örnek ekran) | karar kaydı | **E** | ☐ |
