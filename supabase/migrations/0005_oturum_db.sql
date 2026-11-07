@@ -7,7 +7,7 @@
 --   * Başarılı girişte DB oturum token'ı üretir; yalnız sha256'sı svc_oturumlar'da durur.
 --   * svc_sahip_dogrula = anahtar + geçerli oturum (başlık: x-bee-oturum). Diğer fonksiyonların imzası değişmez.
 --   * Anahtar-yalnız fonksiyonlar: giriş (baslat/tamamla), kurulum (baslat/sifre_kur).
--- Veri etkisi: svc_giris 0 satır (canlıda ölçüldü 2026-11-07); silinen iki fonksiyonun çağıranı yok.
+-- Veri etkisi: svc_giris 0 satır (canlıda ölçüldü 2026-11-07).
 select public.svc_kimlik_dogrula('uwmbtaxxdcjumxbnigpy');
 
 comment on column public.svc_giris.password_hash is
@@ -74,9 +74,8 @@ begin
 end $$;
 
 -- ═══ Giriş ═══════════════════════════════════════════════════════════════════════════════
--- Açıklarının çağıranı yok; kaldırılıyor.
-drop function public.svc_s_giris_basarili(text);
-drop function public.svc_s_oturum_surumu(text);
+-- svc_s_giris_basarili ve svc_s_oturum_surumu 0006'da kaldırılır. O ana kadar ikisi de svc_sahip_dogrula'yı
+-- çağırdığı için bu migration'dan itibaren geçerli oturum ister: parolasız giriş açığı burada kapanır.
 
 -- Adım 1: yalnız salt ve iterasyon (gizli değil). Özet DÖNMEZ, sayaç burada artmaz.
 create or replace function public.svc_s_giris_baslat(p_sahip text) returns jsonb

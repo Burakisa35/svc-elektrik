@@ -34,7 +34,11 @@ done
 hata=$(awk -F'|' '/\| *teslim edildi *\|/ { k=$4; gsub(/[ \t—-]/,"",k); if (k=="") print $2 }' "$TESLIM")
 [ -z "$hata" ]; satir $? "TESLIMLER teslim satırları kanıtlı" "kanıtsız:$hata"
 
-# 6. Sıfırdan kurulum: boş PG 16'da bütün migration'lar + DB testleri (yerel PostgreSQL ve root gerekir)
+# 6. Teşhis kayıtları: ölçümsüz neden DOĞRULANDI/ELENDİ yazılamaz, 5 Neden halkaları testli, FMEA çarpımı doğru
+cikti=$(node araclar/teshis.mjs 2>&1)
+[ $? = 0 ]; satir $? "teşhis kayıtları ($(ls araclar/teshis/T-*.md 2>/dev/null | wc -l) kayıt)" "$(echo "$cikti" | grep KALDI | head -2 | tr '\n' ' ')"
+
+# 7. Sıfırdan kurulum: boş PG 16'da bütün migration'lar + DB testleri (yerel PostgreSQL ve root gerekir)
 if [ -x /usr/lib/postgresql/16/bin/initdb ] && [ "$(id -u)" = 0 ]; then
   cikti=$(bash supabase/tests/yerel-kurulum.sh 2>&1); son=$(echo "$cikti" | tail -1)
   [ "$son" = "SONUÇ  kalan=0" ]; satir $? "sıfırdan kurulum + DB testleri ($(echo "$cikti" | grep -c '^GEÇTİ') adım, yerel PG 16)" "$(echo "$cikti" | grep KALDI | head -2 | tr '\n' ' ')"

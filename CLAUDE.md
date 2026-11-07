@@ -55,9 +55,11 @@ Arayüz ve dokümanlar Türkçe. Kısa, doğrudan, dolgusuz. Kod yorumları Tür
 
 **Oturum başı (Code):** `TESLIMLER.md` ve `git log --oneline -10` okunur, sonra `bash araclar/dogrula.sh` çalıştırılır. KALDI satırı varken yeni iş açılmaz.
 **Teslim:** bir madde ancak kanıtı (komut çıktısı ya da commit) varsa "teslim edildi" yazılır. Kapanış kararı denetleyenindir (`TESLIMLER.md` "Denetim" sütunu).
+**Belirti (Code):** araç hatası, zaman aşımı, kırmızı test ya da beklenmeyen canlı değer görülünce önce `araclar/teshis/BELIRTILER.md` (ilk ölçüm), karmaşıksa `_SABLON.md` ile `T-NNN` kaydı (RCA · 5 Neden · Ishikawa · FMEA). Ölçülmeyen neden ADAY kalır; `node araclar/teshis.mjs` denetler.
+**Migration uygulamadan önce:** `node araclar/mcp-soru-tahmini.mjs`. "SORU ÇIKAR" diyen dosya bu oturumdan MCP ile uygulanamaz (`supabase/CLAUDE.md` Tuzaklar).
 
 ```bash
-bash araclar/dogrula.sh    # tek komut: hook testi, JS sözdizimi, migration kimlik kapısı, TESLIMLER bütünlüğü (5 kontrol, ~2 sn)
+bash araclar/dogrula.sh    # tek komut: hook testi, JS sözdizimi, migration kimlik kapısı, TESLIMLER bütünlüğü, teşhis kayıtları, sıfırdan kurulum (7 kontrol, ~3 sn)
 ```
 Canlı DB kontrolleri (migration MD5'i, `supabase/tests/db-erisim.sql` erişim testi) yerelde koşmaz; MCP ya da SQL Editor ile yapılır: `supabase/CLAUDE.md`. Tümü 2026-11-07'de denendi.
 Koruma: `.claude/settings.json` hook'u, Code'un `knowledge/` ve `docs/` yazmasını Edit/Write **ve** Bash'te engellemek için yazıldı. Birim testinde engelliyor (Yüksek). Canlı oturumda engellediği **Doğrulanmadı**: 2026-11-07'deki iki oturumda deneme engellenmedi; oturumlar repo kökünde açılmadığı için hook yüklenmemiş olabilir (Orta). Yolu metinde geçmeyen betikle yazma yakalanmaz.
@@ -75,5 +77,5 @@ docs/references/   Supabase, Vercel, CLAUDE.md kullanım rehberleri (src/ ve sup
 src/               uygulama (Claude Code); durum ve kurallar src/CLAUDE.md
 supabase/          migration'lar + DB testi (Claude Code); supabase/CLAUDE.md
 TESLIMLER.md       brief teslim kaydı: Code durum yazar, denetleyen kapatır
-araclar/           tek komutluk doğrulama (Claude Code): araclar/dogrula.sh
+araclar/           Claude Code'un araçları: dogrula.sh (tek komut), teshis/ (belirti → teşhis), mcp-soru-tahmini.mjs
 ```

@@ -13,10 +13,10 @@
 ## Durum (2026-11-07)
 | Migration | Durum | Güven |
 |---|---|---|
-| 0000–0003 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı | Yüksek |
-| 0004 | **Yazıldı, uygulanmadı.** MCP `apply_migration` onay sorusu 5 kez cevapsız kaldı (pencere Burak'a ulaşmıyor olabilir) | Yüksek |
-| 0005 | **Yazıldı, uygulanmadı.** Parola doğrulaması ve oturum DB'de. Yerelde boş PG 16'da 0000→0005 sıfırdan kuruldu; `db-oturum.sql` 15/15 geçti, 3 bozmanın 3'ü yakalandı | Yüksek (yerel PG 16) · canlı PG 17: Doğrulanmadı |
-| Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı | Yüksek |
+| 0000–0004 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı (0004 `964f018d…`, 2026-11-07 06:57 UTC, uygulama anında bütün `svc_` tabloları 0 satır) | Yüksek |
+| 0005 | **Yazıldı, uygulanmadı.** Parola doğrulaması ve oturum DB'de. Fonksiyon gövdesindeki `delete from svc_oturumlar …` onay sorusu çıkarıyor (aşağıda Tuzaklar). Yerelde boş PG 16'da 0000→0006 kuruldu, `db-oturum.sql` 15/15 | Yüksek (yerel PG 16) · canlı PG 17: Doğrulanmadı |
+| 0006 | **Yazıldı, uygulanmadı.** Yalnız DROP/durum seti; gerçek silme olduğu için onay sorusu meşru | Yüksek |
+| Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı. **0005 canlıya geçmeden yapılmaz:** 0003'ün parolasız giriş kapısı (`svc_s_giris_basarili`, anon'a açık) anahtar kurulduğu an çalışır hâle gelir | Yüksek (canlı yetki listesi ölçüldü) |
 
 **API sözleşmesi (0005 sonrası):** giriş = `svc_s_giris_baslat` (salt, iterasyon) → sunucu PBKDF2 600k → `svc_s_giris_tamamla(anahtar, türetilmiş_hex, istemci)` → dönen `oturum` httpOnly çereze. Bundan sonraki her sahip RPC'si `x-bee-oturum: <token>` başlığıyla POST edilir. İlk parola: `svc_s_sifre_kur(anahtar, sha256(türetilmiş), salt, 600000)`. Çıkış: `svc_s_cikis`. Başlığın Supabase gateway'inden PostgREST'e geçtiği Supabase'in kendi örneğine dayanıyor (`x-app-api-key`, Yüksek); bu projede canlıda ölçülmedi.
 
@@ -30,7 +30,7 @@
 Kalan risk: anahtar ile canlı çerez **birlikte** çalınırsa erişim açılır. Anahtarla kilit tetiklenip sahip dışarıda bırakılabilir (hizmet engelleme).
 
 ## Tuzaklar
-- `apply_migration`, DROP içeren SQL'de onay ister. Onay gelmezse 230 sn sonra zaman aşımına uğrar; aynı turda tekrar denenmez.
+- **Onay sorusu bu oturumdan cevaplanamaz.** Supabase MCP (0.13.0, 2026-09-17'den beri) bir ifade DROP/DELETE/TRUNCATE ile başlıyorsa onay sorar; fonksiyon gövdesinin içi de sayılır (kaynak: supabase/mcp `destructive-sql.ts`, Yüksek). Soru oturumun koştuğu yerde, yani bu bulut konteynerinde çıkar, Burak'a ulaşmaz (supabase/supabase PR 53018, Orta) ve 230 sn sonra zaman aşımına uğrar. Uygulamadan önce `node araclar/mcp-soru-tahmini.mjs` çalıştırılır: "SORU ÇIKAR" diyen dosya MCP ile denenmez; aynı turda tekrar da denenmez.
 - SQL Editor'den elle uygulanan migration `schema_migrations`'a kaydedilmez. Kanıt olarak eserler (sütun, fonksiyon) ölçülür.
 - Sıra numaraları (`nextval`) transaction geri alınsa da ilerler. `db-erisim.sql` başta sayaçları kaydeder, sonda `setval` ile geri yükler (setval kalıcıdır). Yeni test bu kalıbı izlemeli; yoksa ilk gerçek iş `BEE-26-0001` olmaz.
 - Free plan (Supabase dokümanı, Yüksek): indirilebilir yedek yok, zamana geri dönüş (PITR) yok; dokümanın önerisi düzenli `supabase db dump` ile dış yedek. 7 gün düşük aktivitede proje durdurulur (önce e-posta gelir), 90 gün içinde geri açılabilir.

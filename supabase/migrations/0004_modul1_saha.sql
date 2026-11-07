@@ -1,6 +1,7 @@
 -- 0004_modul1_saha.sql — Modül 1: sahada ≤30 sn iş açma, çift kayıt engeli, kaçan iş alanları, kurulum kodu sayacı.
 -- Burak'ın düzeltmeleri (2026-11-06) #1 #6 #7. Girilmeyen alan BOŞ kalır: hiçbir yeni alanın varsayılanı yok.
--- Veri etkisi (canlıda ölçüldü, uygulama öncesi): bütün svc_ tabloları 0 satır; drop/kısıt değişikliği veri kaybettirmez.
+-- Veri etkisi (canlıda ölçüldü, uygulama öncesi): bütün svc_ tabloları 0 satır.
+-- Silme (DROP) içeren adımlar ayrı ve küçük 0006'da: onay penceresi yalnız orada çıkar.
 select public.svc_kimlik_dogrula('uwmbtaxxdcjumxbnigpy');
 
 -- ═══ Müşteri: telefon VEYA ad yeterli ═══════════════════════════════════════════════════
@@ -11,10 +12,7 @@ alter table public.svc_musteriler add constraint svc_musteriler_tanimli check (t
 
 -- ═══ İş: tekillik, durum seti, kaçan iş alanları ═══════════════════════════════════════
 alter table public.svc_isler add column istemci_id uuid unique;
--- 'beklemede' kaldırıldı: 'ertelendi' ile aynı şeyi anlatıyordu; NEDEN'i 'engel' taşır. Tabloda 0 satır vardı.
-alter table public.svc_isler drop constraint svc_isler_durum_check;
-alter table public.svc_isler add constraint svc_isler_durum_check
-  check (durum in ('acik','ertelendi','kapandi','iptal','kacirildi'));
+-- Durum seti değişikliği ('beklemede' → 'ertelendi', + 'kacirildi') 0006'da.
 alter table public.svc_isler
   add column engel text check (engel in ('ekipman','bilgi','ulasim','malzeme','zaman','fiyat','diger')),
   add column tahmini_bedel numeric(12,2) check (tahmini_bedel >= 0),
@@ -26,7 +24,7 @@ comment on column public.svc_isler.engel is 'Ertelenen/kaçırılan işin nedeni
 alter table public.svc_talepler add column istemci_id uuid unique;
 
 -- ═══ Herkese açık talep: istemci_id ile tekrar deneme aynı kaydı döndürür ═══════════════
-drop function public.svc_talep_olustur(text,text,text,text,text,text,text,text,text,text,text,text,text);
+-- Yeni imza (14 parametre) eskisinin yanında açılır; eski 13 parametreli sürüm 0006'da kaldırılır.
 create function public.svc_talep_olustur(
   p_kapi text, p_ip_hash text,
   p_ad text, p_soyad text, p_telefon text, p_hizmet_turu text,
