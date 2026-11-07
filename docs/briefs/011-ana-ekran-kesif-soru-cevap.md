@@ -5,7 +5,7 @@ Amaç: ekranları "güzel olsun" diye değil, **Burak'ın gerçek iş davranış
 
 ## 1. Yöntem (neden böyle)
 - **Somut davranış sor, özellik isteği sorma.** "Şu özellik olsun mu?" evet'e kayar. "Son 10 işin nasıl geldi?" gerçeği verir. (Orta; anket tasarımı ilkesi, Burak'ın "deneme-yanılma" yaklaşımıyla uyumlu.)
-- **Bir seferde bir soru**, tıklanır seçenek + serbest metin. Toplam **8 soru**, daha fazlası yok.
+- **Bir seferde bir soru**, tıklanır seçenek + serbest metin. Toplam **8 soru**; cevaplardan doğan, gerekçesi yazılı **en çok 2 ek soru** (ANA-9, ANA-10). Daha fazlası yok.
 - **Fikir hakkı (Burak, 2026-11-07):** her soruda seçeneğin yanında **kendi fikrini** yazabilir. Fikir cevaptan ayrı kaydedilir ("Burak'ın fikri" sütunu) ve seçenekten **ağırlıklıdır**: seçenekler benim tahminimdir, fikir senin sahandır. Fikir seçeneklerle çelişirse tasarım fikre göre kurulur, seçenek listesi düzeltilir.
 - **Her cevap bir tasarım kuralına dönüşür** (bölüm 3): hangi ekran alanını etkiler, güveni ne.
 - **Beyan ≠ davranış.** Cevaplar "beyan"dır ([stated], Orta). Uygulama içi soru sistemi (brief 005) gerçek kullanımı ölçünce çelişki varsa **ölçüm kazanır**.
