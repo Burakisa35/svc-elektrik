@@ -33,3 +33,4 @@ Bütünlük: `bash araclar/dogrula.sh` → tablodaki her commit'in dalda var old
 | Brief dışı · Supabase tam denetim | teslim edildi | `get_advisors` (güvenlik/performans/sağlık), `query_logs`, katalog sorguları → `supabase/CLAUDE.md` | [0c19075](https://github.com/burakisa35/svc-elektrik/commit/0c19075) | |
 | Brief dışı · Modül 1 API ve ekranlar | başlanmadı | 0004 ve tasarım yönü (ES-6) bekleniyor | — | |
 | Brief dışı · Teslim kaydı biçimi (Denetim sütunu, kanıt şartı) + tek komutlu doğrulama | teslim edildi | `bash araclar/dogrula.sh` → SONUÇ 5/5; bozma: sahte commit ve kanıtsız satır içeren kopyada 2 KALDI (3/5) | `araclar/dogrula.sh` ekleyen commit | |
+| Brief dışı · En kritik temel açık: araştırma + karar önerisi (0005 tasarımı) | teslim edildi | Exa 5 arama (PostgREST, Supabase signing keys, API keys, pre-request, RFC 5802) → `supabase/CLAUDE.md` "Yetki modelinin en kritik açığı" bölümü; migration yazılmadı | `supabase/CLAUDE.md`'yi güncelleyen commit | |

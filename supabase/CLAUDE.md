@@ -14,8 +14,17 @@
 | Migration | Durum | Güven |
 |---|---|---|
 | 0000–0003 | Canlıda; uygulanan SQL'in MD5'i dosyayla aynı | Yüksek |
-| 0004 | **Yazıldı, uygulanmadı.** MCP `apply_migration` onay sorusu 4 kez cevapsız kaldı (pencere Burak'a ulaşmıyor olabilir) | Yüksek |
+| 0004 | **Yazıldı, uygulanmadı.** MCP `apply_migration` onay sorusu 5 kez cevapsız kaldı (pencere Burak'a ulaşmıyor olabilir) | Yüksek |
 | Kurulum (`svc_kurulum()`) | Yapılmadı; `svc_ayarlar` boş, bu yüzden bütün fonksiyonlar kapalı | Yüksek |
+
+## Yetki modelinin en kritik açığı ve karar önerisi (araştırma 2026-11-07, Burak onayı bekliyor)
+**Açık:** DB yalnız sahip anahtarını doğruluyor, oturumu doğrulamıyor. Vercel ortamı sızarsa saldırgan `svc_s_giris_baslat` ile parola özetini alabilir (çevrimdışı kaba kuvvet), `svc_s_giris_basarili`'yi doğrudan çağırıp parolasız "giriş" yapabilir. Parola, kilit ve çıkıştaki iptal böylece atlanır (Yüksek, kod okundu).
+**Öneri (0005):**
+1. **Parola doğrulaması DB'de, PBKDF2 sunucuda kalır.** DB yalnız `sha256(PBKDF2(parola, salt, 600k))` özetini saklar. Sunucu türettiği anahtarı gönderir, DB özetle karşılaştırır. DB özet ya da salt dışında hiçbir şey döndürmez. Bu, RFC 5802 SCRAM'deki StoredKey düzeninin basit hâli: "saklanan bilgi tek başına istemciyi taklit etmeye yetmez" (Yüksek, RFC). Sonuç: anahtarı ele geçiren kişi yalnız çevrimiçi tahmin yapabilir, o da DB'deki atomik kilide takılır.
+2. **Oturum DB'de.** Başarılı girişte DB rastgele bir oturum token'ı üretir ve `svc_oturumlar`'a yalnız özetini, süresiyle ve iptal alanıyla yazar. Sunucu token'ı httpOnly çerezde tutar ve her istekte `x-bee-oturum` başlığıyla gönderir. `svc_sahip_dogrula` başlığı `current_setting('request.headers', true)::json->>'x-bee-oturum'` ile okur (PostgREST ve Supabase belgeleri, Yüksek). Diğer ~15 fonksiyonun imzası değişmez. Yalnız giriş fonksiyonları başlıksız çalışır. Çıkış oturum satırını iptal eder.
+3. **Reddedilen yol, kendi JWT'mizi imzalamak:** Supabase, projeye özel imza anahtarı yüklemeye izin veriyor, ama bu anahtar `service_role` dahil **her rolü** basabilir (Supabase signing-keys belgesi, Yüksek). Anahtar sızarsa RLS dahil her şey açılır; bugünkü modelden daha kötü.
+4. **Legacy anahtarlar:** `anon` ve `service_role` (10 yıllık JWT'ler) hâlâ etkin ve kullanılmıyor. Supabase bunları 2026 sonunda kaldırıyor. Dashboard'dan devre dışı bırakılmalı: Settings → API Keys (Burak; Yüksek).
+Kalan risk: anahtar ile canlı çerez **birlikte** çalınırsa erişim açılır. Anahtarla kilit tetiklenip sahip dışarıda bırakılabilir (hizmet engelleme).
 
 ## Tuzaklar
 - `apply_migration`, DROP içeren SQL'de onay ister. Onay gelmezse 230 sn sonra zaman aşımına uğrar; aynı turda tekrar denenmez.
